@@ -1,0 +1,327 @@
+// StudyTest AI - Database Schema
+// PostgreSQL with Prisma ORM v7
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum DocumentStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  streakCount   Int       @default(0)
+  lastStudyDate DateTime?
+  badges        Json      @default("[]")
+  xp            Int       @default(0)
+  gold          Int       @default(0)
+  level         Int       @default(1)
+  unlockedThemes Json      @default("[\"default\"]")
+  activeTheme   String    @default("default")
+  activeTitle   String    @default("Novice Scholar")
+  createdAt     DateTime  @default(now())
+
+  accounts          Account[]
+  sessions          Session[]
+  documents         Document[]
+  attempts          Attempt[]
+  flashcardProgress FlashcardProgress[]
+  studyPlans        StudyPlan[]
+
+  @@map("users")
+}
+
+model Document {
+  id            String         @id @default(cuid())
+  userId        String
+  title         String
+  filename      String
+  filePath      String
+  fileSize      Int            // bytes
+  pageCount     Int            @default(0)
+  extractedText String?        @db.Text
+  visualOutline String?        @db.Text
+  podcastScript String?        @db.Text
+  status        DocumentStatus @default(PENDING)
+  uploadedAt    DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizzes        GeneratedQuiz[]
+  flashcardDecks FlashcardDeck[]
+  chatMessages   ChatMessage[]
+
+  @@index([userId])
+  @@map("documents")
+}
+
+enum QuestionType {
+  MCQ
+  TRUE_FALSE
+  SHORT_ANSWER
+  FILL_IN_THE_BLANKS
+}
+
+model GeneratedQuiz {
+  id            String       @id @default(cuid())
+  documentId    String
+  title         String
+  questionCount Int
+  shareCode     String?      @unique
+  format        QuestionType @default(MCQ)
+  timeLimit     Int?
+  createdAt     DateTime     @default(now())
+
+  document  Document     @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  Attempt[]
+  battles   QuizBattle[]
+
+  @@index([documentId])
+  @@map("generated_quizzes")
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  quizId        String
+  question      String       @db.Text
+  options       Json         // string[]
+  correctAnswer String
+  explanation   String       @db.Text
+  difficulty    Difficulty   @default(MEDIUM)
+  topic         String       @default("")
+  type          QuestionType @default(MCQ)
+  orderIndex    Int
+
+  quiz    GeneratedQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@index([quizId])
+  @@map("questions")
+}
+
+model Attempt {
+  id               String    @id @default(cuid())
+  userId           String
+  quizId           String
+  score            Int       @default(0)
+  totalQuestions   Int       @default(0)
+  percentage       Float     @default(0)
+  timeSpentSeconds Int       @default(0)
+  aiFeedback       String?   @db.Text
+  mode             String    @default("PRACTICE")
+  startedAt        DateTime  @default(now())
+  completedAt      DateTime?
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz    GeneratedQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers Answer[]
+
+  @@index([userId])
+  @@index([quizId])
+  @@map("attempts")
+}
+
+model Answer {
+  id             String  @id @default(cuid())
+  attemptId      String
+  questionId     String
+  selectedAnswer String
+  isCorrect      Boolean @default(false)
+  aiExplanation  String? @db.Text
+
+  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+  @@index([questionId])
+  @@map("answers")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model FlashcardDeck {
+  id         String   @id @default(cuid())
+  documentId String
+  title      String
+  cardCount  Int      @default(0)
+  shareCode  String?  @unique
+  createdAt  DateTime @default(now())
+
+  document   Document    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  flashcards Flashcard[]
+
+  @@index([documentId])
+  @@map("flashcard_decks")
+}
+
+model Flashcard {
+  id        String   @id @default(cuid())
+  deckId    String
+  front     String   @db.Text
+  back      String   @db.Text
+  createdAt DateTime @default(now())
+
+  deck      FlashcardDeck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  progress  FlashcardProgress[]
+
+  @@index([deckId])
+  @@map("flashcards")
+}
+
+model FlashcardProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  cardId      String
+  interval    Int      @default(0)    // Review interval in days
+  repetitions Int      @default(0)    // Consecutive correct reviews
+  easeFactor  Float    @default(2.5)  // Ease Factor multiplier
+  nextReview  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card        Flashcard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId])
+  @@index([userId])
+  @@index([cardId])
+  @@map("flashcard_progress")
+}
+
+model StudyPlan {
+  id           String          @id @default(cuid())
+  userId       String
+  title        String
+  targetDate   DateTime
+  dailyMinutes Int
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks StudyPlanTask[]
+
+  @@index([userId])
+  @@map("study_plans")
+}
+
+model StudyPlanTask {
+  id               String   @id @default(cuid())
+  planId           String
+  dayNumber        Int
+  date             DateTime
+  topic            String
+  description      String   @db.Text
+  estimatedMinutes Int
+  isCompleted      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  plan StudyPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@map("study_plan_tasks")
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  documentId String
+  role       String   // "user" | "assistant"
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@map("chat_messages")
+}
+
+model QuizBattle {
+  id        String             @id @default(cuid())
+  quizId    String
+  hostId    String
+  status    String             // "LOBBY" | "ACTIVE" | "FINISHED"
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  quiz    GeneratedQuiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  players QuizBattlePlayer[]
+
+  @@index([quizId])
+  @@map("quiz_battles")
+}
+
+model QuizBattlePlayer {
+  id         String    @id @default(cuid())
+  battleId   String
+  userId     String
+  userName   String
+  progress   Int       @default(0) // Number of questions answered
+  score      Int       @default(0) // Current score
+  finishedAt DateTime? // When they completed
+  timeSpent  Int       @default(0) // Time spent in seconds
+
+  battle QuizBattle @relation(fields: [battleId], references: [id], onDelete: Cascade)
+
+  @@unique([battleId, userId])
+  @@map("quiz_battle_players")
+}
