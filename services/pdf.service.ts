@@ -11,15 +11,17 @@ export interface PDFExtractionResult {
  */
 async function extractTextUsingGemini(
   buffer: Buffer,
-  apiKey?: string
+  apiKey?: string,
+  modelName?: string
 ): Promise<{ text: string }> {
   const finalApiKey = apiKey || process.env.GEMINI_API_KEY;
   if (!finalApiKey || finalApiKey === "your_google_gemini_api_key") {
     throw new Error("Gemini API key is not configured.");
   }
 
+  const model = modelName || "gemini-1.5-flash";
   const base64Data = buffer.toString("base64");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${finalApiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${finalApiKey}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -89,8 +91,8 @@ export async function extractTextFromPDF(
 
   if (isGeminiAvailable) {
     try {
-      console.log("Extracting PDF text and performing OCR using Google Gemini...");
-      const geminiResult = await extractTextUsingGemini(buffer, apiKey);
+      console.log(`Extracting PDF text and performing OCR using Google Gemini (${settings.model || "gemini-1.5-flash"})...`);
+      const geminiResult = await extractTextUsingGemini(buffer, apiKey, settings.model);
       const cleanedText = (geminiResult.text || "").trim();
 
       if (cleanedText && cleanedText.length >= 50) {
