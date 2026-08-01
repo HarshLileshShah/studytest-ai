@@ -1,4 +1,4 @@
-import { PDFParse } from "pdf-parse";
+import pdf from "pdf-parse";
 
 export interface PDFExtractionResult {
   text: string;
@@ -7,17 +7,15 @@ export interface PDFExtractionResult {
 
 /**
  * Extracts text content from a PDF file buffer.
- * Uses pdf-parse v2 for server-side extraction.
+ * Uses standard Node-compatible pdf-parse v1.1.1.
  */
 export async function extractTextFromPDF(
   buffer: Buffer
 ): Promise<PDFExtractionResult> {
   try {
-    // pdf-parse v2: pass data in LoadParameters
-    const pdf = new PDFParse({ data: new Uint8Array(buffer) });
-    const result = await pdf.getText();
+    const data = await pdf(buffer);
 
-    const cleanedText = (result.text || "")
+    const cleanedText = (data.text || "")
       // Normalize whitespace
       .replace(/\s+/g, " ")
       // Remove excessive newlines
@@ -30,16 +28,7 @@ export async function extractTextFromPDF(
       );
     }
 
-    // Get page count from info
-    let pageCount = result.total || 0;
-    try {
-      const info = await pdf.getInfo();
-      pageCount = info.total || result.total || 0;
-    } catch {
-      // info parsing can fail; use text result's total
-    }
-
-    await pdf.destroy();
+    const pageCount = data.numpages || 0;
 
     return {
       text: cleanedText,
