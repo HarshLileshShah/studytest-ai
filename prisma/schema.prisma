@@ -73,6 +73,7 @@ model Document {
   quizzes        GeneratedQuiz[]
   flashcardDecks FlashcardDeck[]
   chatMessages   ChatMessage[]
+  interactiveSessions InteractiveSession[]
 
   @@index([userId])
   @@map("documents")
@@ -324,4 +325,84 @@ model QuizBattlePlayer {
 
   @@unique([battleId, userId])
   @@map("quiz_battle_players")
+}
+
+model InteractiveSession {
+  id                 String             @id @default(cuid())
+  documentId         String
+  hostId             String
+  shareCode          String             @unique
+  status             String             // "LOBBY" | "ACTIVE" | "FINISHED"
+  currentSlideIndex  Int                @default(0)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  document           Document           @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  slides             SessionSlide[]
+  participants       SessionParticipant[]
+  qaQuestions        SessionQA[]
+
+  @@index([documentId])
+  @@map("interactive_sessions")
+}
+
+model SessionSlide {
+  id              String             @id @default(cuid())
+  sessionId       String
+  slideIndex      Int
+  type            String             // "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "OPEN_ENDED" | "LEADERBOARD"
+  title           String
+  content         String?            @db.Text
+  options         Json?              // For multiple choice choices (e.g. ["A", "B", "C"])
+  correctAnswer   String?            // For quiz mode choice
+  
+  session         InteractiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  responses       SessionResponse[]
+
+  @@index([sessionId])
+  @@map("session_slides")
+}
+
+model SessionParticipant {
+  id            String             @id @default(cuid())
+  sessionId     String
+  userId        String
+  userName      String
+  joinedAt      DateTime           @default(now())
+  score         Int                @default(0)
+
+  session       InteractiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+  @@map("session_participants")
+}
+
+model SessionResponse {
+  id              String             @id @default(cuid())
+  slideId         String
+  userId          String
+  userName        String
+  value           String             @db.Text
+  scoreEarned     Int                @default(0)
+  submittedAt     DateTime           @default(now())
+
+  slide           SessionSlide       @relation(fields: [slideId], references: [id], onDelete: Cascade)
+
+  @@unique([slideId, userId])
+  @@map("session_responses")
+}
+
+model SessionQA {
+  id              String             @id @default(cuid())
+  sessionId       String
+  userId          String
+  userName        String
+  questionText    String             @db.Text
+  likes           Int                @default(0)
+  isAnswered      Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+
+  session       InteractiveSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("session_qa_questions")
 }

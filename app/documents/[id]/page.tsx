@@ -17,6 +17,7 @@ import { formatDate, formatFileSize } from "@/lib/utils";
 import { DeleteDocumentButton } from "./delete-button";
 import { GenerateQuizModal } from "./generate-quiz-modal";
 import { GenerateFlashcardButton } from "./generate-flashcard-button";
+import { PresentLiveButton } from "./present-live-button";
 import { DocumentTabs } from "./document-tabs";
 import { auth } from "@/auth";
 
@@ -92,6 +93,7 @@ export default async function DocumentDetailPage({
         <div className="flex items-center gap-3">
           {document.status === "READY" && (
             <>
+              <PresentLiveButton documentId={document.id} />
               <GenerateFlashcardButton documentId={document.id} />
               <GenerateQuizModal documentId={document.id} />
             </>
