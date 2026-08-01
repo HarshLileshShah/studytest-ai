@@ -40,6 +40,25 @@ async function getAIClient() {
     };
   }
 
+  if (provider === "openai" && settings?.apiKey) {
+    return {
+      client: new OpenAI({
+        apiKey: settings.apiKey,
+      }),
+      model: settings?.model || "gpt-4o-mini",
+    };
+  }
+
+  if (provider === "openrouter" && settings?.apiKey) {
+    return {
+      client: new OpenAI({
+        apiKey: settings.apiKey,
+        baseURL: "https://openrouter.ai/api/v1",
+      }),
+      model: settings?.model || "google/gemini-2.5-flash",
+    };
+  }
+
   // Fallback to local .env configs
   const isOllamaLocal = process.env.USE_OLLAMA === "true";
   return {

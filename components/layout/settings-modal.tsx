@@ -29,7 +29,7 @@ function deleteCookie(name: string) {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const [provider, setProvider] = useState<"default" | "gemini" | "groq" | "ollama">("default");
+  const [provider, setProvider] = useState<"default" | "gemini" | "groq" | "ollama" | "openai" | "openrouter">("default");
   const [apiKey, setApiKey] = useState("");
   const [modelName, setModelName] = useState("");
   const [saving, setSaving] = useState(false);
@@ -106,6 +106,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 setModelName("llama-3.3-70b-versatile");
               } else if (val === "ollama") {
                 setModelName("gemma:2b");
+              } else if (val === "openai") {
+                setModelName("gpt-4o-mini");
+              } else if (val === "openrouter") {
+                setModelName("google/gemini-2.5-flash");
               }
             }}
             className="w-full p-2.5 text-xs bg-muted/20 border border-border/80 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-foreground select-none cursor-pointer"
@@ -113,6 +117,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <option value="default">System Default (Shared Groq / Llama)</option>
             <option value="gemini">Google Gemini (Bring Your Own Key)</option>
             <option value="groq">Groq Console (Bring Your Own Key)</option>
+            <option value="openai">OpenAI ChatGPT (Bring Your Own Key)</option>
+            <option value="openrouter">OpenRouter API (Bring Your Own Key)</option>
             <option value="ollama">Local Ollama Server (Offline Dev)</option>
           </select>
         </div>

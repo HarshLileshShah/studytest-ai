@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 export interface AISettings {
-  provider: "default" | "gemini" | "groq" | "ollama";
+  provider: "default" | "gemini" | "groq" | "ollama" | "openai" | "openrouter";
   apiKey?: string;
   model?: string;
 }
