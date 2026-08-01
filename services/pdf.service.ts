@@ -1,4 +1,5 @@
 import pdf from "pdf-parse";
+import OpenAI from "openai";
 import { getAISettingsFromCookies } from "@/lib/ai-settings";
 import { getAIClient } from "./ai.service";
 
@@ -8,66 +9,11 @@ export interface PDFExtractionResult {
 }
 
 /**
- * Sends a PDF binary to the Gemini API for high-fidelity OCR and text extraction.
- */
-async function extractTextUsingGemini(
-  buffer: Buffer,
-  apiKey?: string,
-  modelName?: string
-): Promise<{ text: string }> {
-  const finalApiKey = apiKey || process.env.GEMINI_API_KEY;
-  if (!finalApiKey || finalApiKey === "your_google_gemini_api_key") {
-    throw new Error("Gemini API key is not configured.");
-  }
-
-  const model = modelName || "gemini-1.5-flash";
-  const base64Data = buffer.toString("base64");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${finalApiKey}`;
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              inlineData: {
-                mimeType: "application/pdf",
-                data: base64Data,
-              },
-            },
-            {
-              text: "Please extract all text and content from this document. If there are scanned images, hand-written notes, diagrams containing text, or tables, perform high-fidelity OCR to extract all textual information. Retain the general order and formatting of the pages. Do not summarize or paraphrase the document; output the exact full text.",
-            },
-          ],
-        },
-      ],
-    }),
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Gemini API returned status ${response.status}: ${errText}`);
-  }
-
-  const json = await response.json();
-  const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) {
-    throw new Error("Invalid response format from Gemini API");
-  }
-
-  return { text };
-}
-
-/**
  * Extracts text content from a PDF file buffer.
  * Performs dynamic routing:
- * - If Google Gemini is configured: Runs native visual base64 Gemini OCR.
+ * - If Google Gemini is configured (or system default has keys): Runs native visual base64 Gemini OCR.
  * - If another custom provider is configured (OpenAI, OpenRouter, Groq, Ollama):
- *   Extracts raw text locally via pdf-parse, then sends it to the custom AI model to clean, format, and structure.
+ *   Sends raw base64 PDF directly to the custom model for native visual processing.
  * - Otherwise: Falls back to local text-only pdf-parse.
  */
 export async function extractTextFromPDF(
@@ -87,36 +33,34 @@ export async function extractTextFromPDF(
     // Ignore and proceed
   }
 
-  // 2. Google Gemini: Native visual OCR route
-  const hasGeminiKey =
-    (provider === "gemini" && settings.apiKey) ||
-    (provider === "default" &&
-      process.env.GEMINI_API_KEY &&
-      process.env.GEMINI_API_KEY !== "your_google_gemini_api_key");
+  // 2. Resolve client and model dynamically
+  let aiClient: OpenAI | null = null;
+  let aiModel = "";
 
-  if (hasGeminiKey && (provider === "gemini" || provider === "default")) {
+  // If user has a custom provider configured, use it
+  if (provider !== "default") {
     try {
-      const apiKey = provider === "gemini" ? settings.apiKey : process.env.GEMINI_API_KEY;
-      console.log(`Extracting PDF text and performing OCR using Google Gemini (${settings.model || "gemini-1.5-flash"})...`);
-      const geminiResult = await extractTextUsingGemini(buffer, apiKey, settings.model);
-      const cleanedText = (geminiResult.text || "").trim();
-
-      if (cleanedText && cleanedText.length >= 50) {
-        return {
-          text: cleanedText,
-          pageCount,
-        };
-      }
-    } catch (geminiError) {
-      console.warn("Gemini OCR text extraction failed, falling back to dynamic parser:", geminiError);
+      const resolved = await getAIClient();
+      aiClient = resolved.client;
+      aiModel = resolved.model;
+    } catch {}
+  } 
+  // If system default is selected, use Google Gemini API if system key is available
+  else {
+    const defaultGeminiKey = process.env.GEMINI_API_KEY;
+    if (defaultGeminiKey && defaultGeminiKey !== "your_google_gemini_api_key" && defaultGeminiKey.trim() !== "") {
+      aiClient = new OpenAI({
+        apiKey: defaultGeminiKey,
+        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      });
+      aiModel = settings.model || "gemini-1.5-flash";
     }
   }
 
-  // 3. Other custom providers: Send base64 PDF directly for visual OCR if provider is custom
-  if (provider !== "default") {
+  // 3. Send raw base64 PDF directly to the selected client for visual OCR
+  if (aiClient && aiModel) {
     try {
-      console.log(`Extracting and parsing PDF text using custom provider: ${provider} (${settings.model})...`);
-      const { client: aiClient, model: aiModel } = await getAIClient();
+      console.log(`Extracting and parsing PDF text using provider: ${provider} (${aiModel})...`);
       const base64Data = buffer.toString("base64");
 
       const response = await aiClient.chat.completions.create({
@@ -153,7 +97,7 @@ export async function extractTextFromPDF(
     }
   }
 
-  // 4. Default Fallback: Clean and return raw text
+  // 4. Default Fallback: Clean and return raw text extracted locally
   if (rawText) {
     const cleanedText = rawText
       .replace(/\s+/g, " ")
