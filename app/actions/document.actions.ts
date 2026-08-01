@@ -3,11 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { writeFile, mkdir, unlink } from "fs/promises";
 import { join } from "path";
+import { tmpdir } from "os";
 import { createDocument, getDocument, updateDocumentStatus, deleteDocument as deleteDoc } from "@/services/document.service";
 import { extractTextFromPDF } from "@/services/pdf.service";
 import { auth } from "@/auth";
 
-const UPLOAD_DIR = join(process.cwd(), "uploads");
+const UPLOAD_DIR = process.env.NODE_ENV === "production"
+  ? tmpdir()
+  : join(process.cwd(), "uploads");
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 /**
