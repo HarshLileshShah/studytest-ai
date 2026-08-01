@@ -1,4 +1,5 @@
 import pdf from "pdf-parse";
+import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
 export interface PDFExtractionResult {
   text: string;
@@ -9,15 +10,16 @@ export interface PDFExtractionResult {
  * Sends a PDF binary to the Gemini API for high-fidelity OCR and text extraction.
  */
 async function extractTextUsingGemini(
-  buffer: Buffer
+  buffer: Buffer,
+  apiKey?: string
 ): Promise<{ text: string }> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === "your_google_gemini_api_key") {
+  const finalApiKey = apiKey || process.env.GEMINI_API_KEY;
+  if (!finalApiKey || finalApiKey === "your_google_gemini_api_key") {
     throw new Error("Gemini API key is not configured.");
   }
 
   const base64Data = buffer.toString("base64");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${finalApiKey}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -74,7 +76,12 @@ export async function extractTextFromPDF(
   }
 
   // Attempt to use Google Gemini for high-fidelity OCR text extraction
-  const apiKey = process.env.GEMINI_API_KEY;
+  const settings = await getAISettingsFromCookies();
+  let apiKey = process.env.GEMINI_API_KEY;
+  if (settings.provider === "gemini" && settings.apiKey) {
+    apiKey = settings.apiKey;
+  }
+
   const isGeminiAvailable =
     apiKey &&
     apiKey !== "your_google_gemini_api_key" &&
@@ -83,7 +90,7 @@ export async function extractTextFromPDF(
   if (isGeminiAvailable) {
     try {
       console.log("Extracting PDF text and performing OCR using Google Gemini...");
-      const geminiResult = await extractTextUsingGemini(buffer);
+      const geminiResult = await extractTextUsingGemini(buffer, apiKey);
       const cleanedText = (geminiResult.text || "").trim();
 
       if (cleanedText && cleanedText.length >= 50) {

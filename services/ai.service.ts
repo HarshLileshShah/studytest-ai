@@ -1,21 +1,78 @@
 import OpenAI from "openai";
 import { z } from "zod";
 import type { GeneratedQuestion } from "@/types";
+import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
-const isOllama = process.env.USE_OLLAMA === "true";
+/**
+ * Dynamically constructs OpenAI client based on cookie settings or system environment fallbacks.
+ */
+async function getAIClient() {
+  const settings = await getAISettingsFromCookies();
+  const provider = settings?.provider || "default";
 
-// Groq or local Ollama OpenAI-compatible client setup
-const client = new OpenAI({
-  apiKey: isOllama ? "ollama" : (process.env.GROQ_API_KEY || ""),
-  baseURL: isOllama
-    ? (process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1")
-    : "https://api.groq.com/openai/v1",
-});
+  if (provider === "ollama") {
+    return {
+      client: new OpenAI({
+        apiKey: "ollama",
+        baseURL: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+      }),
+      model: settings?.model || process.env.OLLAMA_MODEL || "gemma:2b",
+    };
+  }
 
-// Model selection (uses llama-3.3-70b-versatile or custom local Ollama model like gemma:2b)
-const AI_MODEL = isOllama
-  ? (process.env.OLLAMA_MODEL || "gemma:2b")
-  : "llama-3.3-70b-versatile";
+  if (provider === "groq" && settings?.apiKey) {
+    return {
+      client: new OpenAI({
+        apiKey: settings.apiKey,
+        baseURL: "https://api.groq.com/openai/v1",
+      }),
+      model: settings?.model || "llama-3.3-70b-versatile",
+    };
+  }
+
+  if (provider === "gemini" && settings?.apiKey) {
+    return {
+      client: new OpenAI({
+        apiKey: settings.apiKey,
+        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      }),
+      model: settings?.model || "gemini-1.5-flash",
+    };
+  }
+
+  // Fallback to local .env configs
+  const isOllamaLocal = process.env.USE_OLLAMA === "true";
+  return {
+    client: new OpenAI({
+      apiKey: isOllamaLocal ? "ollama" : (process.env.GROQ_API_KEY || ""),
+      baseURL: isOllamaLocal
+        ? (process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1")
+        : "https://api.groq.com/openai/v1",
+    }),
+    model: isOllamaLocal
+      ? (process.env.OLLAMA_MODEL || "gemma:2b")
+      : "llama-3.3-70b-versatile",
+  };
+}
+
+// Dynamic OpenAI client proxy redirecting requests to custom users settings
+const client = {
+  get chat() {
+    return {
+      get completions() {
+        return {
+          create: async (params: any, options: any) => {
+            const { client: actualClient, model } = await getAIClient();
+            params.model = model;
+            return actualClient.chat.completions.create(params, options);
+          }
+        };
+      }
+    };
+  }
+} as unknown as OpenAI;
+
+const AI_MODEL = "llama-3.3-70b-versatile";
 
 const questionSchema = z.object({
   question: z.string(),

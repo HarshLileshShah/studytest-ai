@@ -11,6 +11,7 @@ import {
   X,
   Layers,
   CalendarRange,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -18,6 +19,7 @@ import { useSession, signOut } from "next-auth/react";
 
 import { ThemeIconToggle } from "./theme-icon-toggle";
 import { VoiceSelector } from "./voice-selector";
+import { SettingsModal } from "./settings-modal";
 
 const navItems = [
   {
@@ -50,6 +52,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { data: session, status } = useSession();
 
   return (
@@ -158,6 +161,13 @@ export function Sidebar() {
               </div>
               <ThemeIconToggle />
               <VoiceSelector />
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer"
+                title="AI Settings"
+              >
+                <Settings className="w-4 h-4" />
+              </button>
             </div>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
@@ -175,6 +185,7 @@ export function Sidebar() {
             </div>
           </div>
         )}
+        <SettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </aside>
     </>
   );
