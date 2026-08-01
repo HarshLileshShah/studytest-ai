@@ -1,0 +1,6 @@
+# Define code owners for the repository.
+# Every pull request or change will automatically request reviews from these users.
+# Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global code owner (default for all files)
+*       @HarshLileshShah
