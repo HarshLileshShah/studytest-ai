@@ -49,10 +49,13 @@ export async function createSessionAction(documentId: string) {
       return { success: false, error: "Document not found." };
     }
 
-    const { client: aiClient, model: aiModel } = await getAIClient();
-    const textSnippet = (doc.extractedText || "").slice(0, 5000);
+    let slidesData: SlideInput[] = [];
 
-    const aiPrompt = `You are an expert slides designer. Create a structured presentation slideshow for a classroom live interactive session based on this text.
+    try {
+      const { client: aiClient, model: aiModel } = await getAIClient();
+      const textSnippet = (doc.extractedText || "").slice(0, 5000);
+
+      const aiPrompt = `You are an expert slides designer. Create a structured presentation slideshow for a classroom live interactive session based on this text.
 Return a JSON object containing a "slides" array.
 Each slide has:
 - type: one of "INFO" (content slide), "MULTIPLE_CHOICE" (interactive quiz question), "WORD_CLOUD" (tag input)
@@ -77,17 +80,50 @@ ${textSnippet}
 
 Make sure the output matches JSON format exactly.`;
 
-    const response = await aiClient.chat.completions.create({
-      model: aiModel,
-      messages: [
-        { role: "system", content: "You are a dynamic presentation builder returning strictly raw JSON format." },
-        { role: "user", content: aiPrompt },
-      ],
-      response_format: { type: "json_object" },
-    });
+      const response = await aiClient.chat.completions.create({
+        model: aiModel,
+        messages: [
+          { role: "system", content: "You are a dynamic presentation builder returning strictly raw JSON format." },
+          { role: "user", content: aiPrompt },
+        ],
+        temperature: 0.3,
+      });
 
-    const data = JSON.parse(response.choices[0]?.message?.content || "{}");
-    const slidesData: SlideInput[] = data.slides || [];
+      const rawContent = response.choices[0]?.message?.content || "";
+      const cleanJson = rawContent.replace(/```json\s*|```/gi, "").trim();
+      const data = JSON.parse(cleanJson);
+      slidesData = data.slides || [];
+    } catch (aiError) {
+      console.warn("AI slides generation failed, falling back to static presentation slides:", aiError);
+      slidesData = [
+        {
+          type: "INFO",
+          title: "Welcome to Live Study Session!",
+          content: "Join using the code on screen. Get ready to interact!"
+        },
+        {
+          type: "INFO",
+          title: `Overview: ${doc.title.slice(0, 30)}`,
+          content: `Let's study the material from ${doc.title}. Presenter will guide you through the key concepts.`
+        },
+        {
+          type: "INFO",
+          title: "First Core Concept",
+          content: "Review key points, diagrams, and formulas in the document."
+        },
+        {
+          type: "WORD_CLOUD",
+          title: "Share Your Thoughts",
+          content: "In 1-2 words, what is the most important takeaway so far?"
+        },
+        {
+          type: "MULTIPLE_CHOICE",
+          title: "Quiz Challenge 1",
+          options: ["Option A (Correct)", "Option B", "Option C", "Option D"],
+          correctAnswer: "Option A (Correct)"
+        }
+      ];
+    }
 
     // Manually append Q&A and final Leaderboard slides
     slidesData.push({
@@ -111,16 +147,14 @@ Make sure the output matches JSON format exactly.`;
         shareCode,
         status: "LOBBY",
         slides: {
-          createMany: {
-            data: slidesData.map((s, idx) => ({
-              slideIndex: idx,
-              type: s.type,
-              title: s.title,
-              content: s.content || null,
-              options: s.options || undefined,
-              correctAnswer: s.correctAnswer || null,
-            })),
-          },
+          create: slidesData.map((s, idx) => ({
+            slideIndex: idx,
+            type: s.type,
+            title: s.title,
+            content: s.content || null,
+            options: s.options || undefined,
+            correctAnswer: s.correctAnswer || null,
+          })),
         },
       },
       include: {
