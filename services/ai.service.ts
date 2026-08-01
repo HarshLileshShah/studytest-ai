@@ -6,7 +6,7 @@ import { getAISettingsFromCookies } from "@/lib/ai-settings";
 /**
  * Dynamically constructs OpenAI client based on cookie settings or system environment fallbacks.
  */
-async function getAIClient() {
+export async function getAIClient() {
   const settings = await getAISettingsFromCookies();
   const provider = settings?.provider || "default";
 

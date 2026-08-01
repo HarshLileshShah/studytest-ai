@@ -1,5 +1,6 @@
 import pdf from "pdf-parse";
 import { getAISettingsFromCookies } from "@/lib/ai-settings";
+import { getAIClient } from "./ai.service";
 
 export interface PDFExtractionResult {
   text: string;
@@ -63,34 +64,39 @@ async function extractTextUsingGemini(
 
 /**
  * Extracts text content from a PDF file buffer.
- * Attempts Google Gemini OCR first, falling back to standard pdf-parse if key is missing or call fails.
+ * Performs dynamic routing:
+ * - If Google Gemini is configured: Runs native visual base64 Gemini OCR.
+ * - If another custom provider is configured (OpenAI, OpenRouter, Groq, Ollama):
+ *   Extracts raw text locally via pdf-parse, then sends it to the custom AI model to clean, format, and structure.
+ * - Otherwise: Falls back to local text-only pdf-parse.
  */
 export async function extractTextFromPDF(
   buffer: Buffer
 ): Promise<PDFExtractionResult> {
-  // First, extract pageCount from local metadata safely
+  const settings = await getAISettingsFromCookies();
+  const provider = settings.provider || "default";
+
+  // 1. Safely extract metadata and raw text locally first
   let pageCount = 1;
+  let rawText = "";
   try {
-    const metadata = await pdf(buffer);
-    pageCount = metadata.numpages || 1;
+    const data = await pdf(buffer);
+    pageCount = data.numpages || 1;
+    rawText = (data.text || "").trim();
   } catch {
     // Ignore and proceed
   }
 
-  // Attempt to use Google Gemini for high-fidelity OCR text extraction
-  const settings = await getAISettingsFromCookies();
-  let apiKey = process.env.GEMINI_API_KEY;
-  if (settings.provider === "gemini" && settings.apiKey) {
-    apiKey = settings.apiKey;
-  }
+  // 2. Google Gemini: Native visual OCR route
+  const hasGeminiKey =
+    (provider === "gemini" && settings.apiKey) ||
+    (provider === "default" &&
+      process.env.GEMINI_API_KEY &&
+      process.env.GEMINI_API_KEY !== "your_google_gemini_api_key");
 
-  const isGeminiAvailable =
-    apiKey &&
-    apiKey !== "your_google_gemini_api_key" &&
-    apiKey.trim() !== "";
-
-  if (isGeminiAvailable) {
+  if (hasGeminiKey && (provider === "gemini" || provider === "default")) {
     try {
+      const apiKey = provider === "gemini" ? settings.apiKey : process.env.GEMINI_API_KEY;
       console.log(`Extracting PDF text and performing OCR using Google Gemini (${settings.model || "gemini-1.5-flash"})...`);
       const geminiResult = await extractTextUsingGemini(buffer, apiKey, settings.model);
       const cleanedText = (geminiResult.text || "").trim();
@@ -102,36 +108,63 @@ export async function extractTextFromPDF(
         };
       }
     } catch (geminiError) {
-      console.warn(
-        "Gemini OCR text extraction failed, falling back to local pdf-parse parser:",
-        geminiError instanceof Error ? geminiError.message : geminiError
-      );
+      console.warn("Gemini OCR text extraction failed, falling back to dynamic parser:", geminiError);
     }
   }
 
-  // Fallback to local text-only parsing via pdf-parse
-  try {
-    console.log("Falling back to local pdf-parse parser...");
-    const data = await pdf(buffer);
-    const cleanedText = (data.text || "")
+  // 3. Other custom providers: Ask custom model to clean up and structure the raw text
+  if (provider !== "default" && rawText && rawText.length >= 50) {
+    try {
+      console.log(`Formatting raw PDF text using custom provider: ${provider} (${settings.model})...`);
+      const { client: aiClient, model: aiModel } = await getAIClient();
+
+      const prompt = `You are a document formatting assistant. Below is the raw, unformatted text extracted from a PDF document.
+Please clean it up, fix spacing, combine broken sentences, fix formatting of equations, tables, headers, and bullet points. Retain all original information, facts, and structure. Do not summarize or add external commentary. Just output the cleaned, well-formatted document text.
+
+Raw Extracted Text:
+---
+${rawText.slice(0, 8000)}
+---
+
+Cleaned and Formatted Text:`;
+
+      const response = await aiClient.chat.completions.create({
+        model: aiModel,
+        messages: [
+          { role: "system", content: "You format and structure raw text to improve formatting and readability." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.2,
+      });
+
+      const cleanedText = response.choices[0]?.message?.content?.trim();
+      if (cleanedText && cleanedText.length >= 50) {
+        return {
+          text: cleanedText,
+          pageCount,
+        };
+      }
+    } catch (aiError) {
+      console.warn(`Text clean-up using custom provider ${provider} failed, returning raw text:`, aiError);
+    }
+  }
+
+  // 4. Default Fallback: Clean and return raw text
+  if (rawText) {
+    const cleanedText = rawText
       .replace(/\s+/g, " ")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
-    if (!cleanedText || cleanedText.length < 50) {
-      throw new Error(
-        "Could not extract meaningful text from the PDF. The file may be image-based or empty."
-      );
+    if (cleanedText && cleanedText.length >= 50) {
+      return {
+        text: cleanedText,
+        pageCount,
+      };
     }
-
-    return {
-      text: cleanedText,
-      pageCount: data.numpages || pageCount,
-    };
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`PDF extraction failed: ${error.message}`);
-    }
-    throw new Error("PDF extraction failed: Unknown error");
   }
+
+  throw new Error(
+    "Could not extract meaningful text from the PDF. The file may be image-based or empty."
+  );
 }
