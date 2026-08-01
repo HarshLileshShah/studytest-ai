@@ -33,6 +33,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState("");
   const [modelName, setModelName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [isLocalHost, setIsLocalHost] = useState(false);
+
+  // Detect local environment
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsLocalHost(
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.includes("local")
+      );
+    }
+  }, []);
 
   // Load settings from cookies on open
   useEffect(() => {
@@ -119,7 +131,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <option value="groq">Groq Console (Bring Your Own Key)</option>
             <option value="openai">OpenAI ChatGPT (Bring Your Own Key)</option>
             <option value="openrouter">OpenRouter API (Bring Your Own Key)</option>
-            <option value="ollama">Local Ollama Server (Offline Dev)</option>
+            {isLocalHost && (
+              <option value="ollama">Local Ollama Server (Offline Dev)</option>
+            )}
           </select>
         </div>
 
