@@ -112,27 +112,31 @@ export async function extractTextFromPDF(
     }
   }
 
-  // 3. Other custom providers: Ask custom model to clean up and structure the raw text
-  if (provider !== "default" && rawText && rawText.length >= 50) {
+  // 3. Other custom providers: Send base64 PDF directly for visual OCR if provider is custom
+  if (provider !== "default") {
     try {
-      console.log(`Formatting raw PDF text using custom provider: ${provider} (${settings.model})...`);
+      console.log(`Extracting and parsing PDF text using custom provider: ${provider} (${settings.model})...`);
       const { client: aiClient, model: aiModel } = await getAIClient();
-
-      const prompt = `You are a document formatting assistant. Below is the raw, unformatted text extracted from a PDF document.
-Please clean it up, fix spacing, combine broken sentences, fix formatting of equations, tables, headers, and bullet points. Retain all original information, facts, and structure. Do not summarize or add external commentary. Just output the cleaned, well-formatted document text.
-
-Raw Extracted Text:
----
-${rawText.slice(0, 8000)}
----
-
-Cleaned and Formatted Text:`;
+      const base64Data = buffer.toString("base64");
 
       const response = await aiClient.chat.completions.create({
         model: aiModel,
         messages: [
-          { role: "system", content: "You format and structure raw text to improve formatting and readability." },
-          { role: "user", content: prompt },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "Please extract all text and content from this document. If there are scanned images, hand-written notes, diagrams containing text, or tables, perform high-fidelity OCR to extract all textual information. Retain the general order and formatting of the pages. Do not summarize or paraphrase the document; output the exact full text.",
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: `data:application/pdf;base64,${base64Data}`,
+                },
+              } as any,
+            ],
+          },
         ],
         temperature: 0.2,
       });
@@ -145,7 +149,7 @@ Cleaned and Formatted Text:`;
         };
       }
     } catch (aiError) {
-      console.warn(`Text clean-up using custom provider ${provider} failed, returning raw text:`, aiError);
+      console.warn(`Direct PDF processing using custom provider ${provider} failed, falling back to local text extraction:`, aiError);
     }
   }
 
