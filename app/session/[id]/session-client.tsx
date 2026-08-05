@@ -44,7 +44,7 @@ export function SessionClient({ sessionId, participantUserId }: SessionClientPro
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState<{
     id: string;
-    type: "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "LEADERBOARD" | "Q_A";
+    type: "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "LEADERBOARD" | "Q_A" | "POLL";
     title: string;
     content: string | null;
     options: string[] | null;
@@ -215,8 +215,8 @@ export function SessionClient({ sessionId, participantUserId }: SessionClientPro
             </div>
           )}
 
-          {/* 3. MULTIPLE CHOICE VOTING */}
-          {currentSlide.type === "MULTIPLE_CHOICE" && (
+          {/* 3. MULTIPLE CHOICE OR POLL VOTING */}
+          {(currentSlide.type === "MULTIPLE_CHOICE" || currentSlide.type === "POLL") && (
             <div className="space-y-4 py-2">
               {hasSubmitted ? (
                 <div className="text-center space-y-4">
@@ -224,7 +224,9 @@ export function SessionClient({ sessionId, participantUserId }: SessionClientPro
                     <CheckCircle className="w-6 h-6 text-green-500" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-foreground">Answer Submitted!</h4>
+                    <h4 className="text-sm font-bold text-foreground">
+                      {currentSlide.type === "MULTIPLE_CHOICE" ? "Answer Submitted!" : "Vote Submitted!"}
+                    </h4>
                     <p className="text-[10px] text-muted-foreground mt-1">
                       You voted: <strong>{myResponse}</strong>. Awaiting presenter results...
                     </p>

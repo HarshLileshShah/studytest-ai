@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getAIClient } from "@/services/ai.service";
 
 interface SlideInput {
-  type: "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "LEADERBOARD" | "Q_A";
+  type: "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "LEADERBOARD" | "Q_A" | "POLL";
   title: string;
   content?: string;
   options?: string[];
