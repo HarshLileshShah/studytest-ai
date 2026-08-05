@@ -533,3 +533,62 @@ export async function markQAAnsweredAction(qaId: string) {
     return { success: false, error: "Failed to flag answered question." };
   }
 }
+
+/**
+ * Server Action: Update presentation slides (Host only, during LOBBY status).
+ */
+export async function updateSessionSlidesAction(
+  sessionId: string,
+  slides: Array<{
+    type: "INFO" | "MULTIPLE_CHOICE" | "WORD_CLOUD" | "LEADERBOARD" | "Q_A";
+    title: string;
+    content?: string | null;
+    options?: string[] | null;
+    correctAnswer?: string | null;
+  }>
+) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return { success: false, error: "Unauthorized." };
+  }
+
+  try {
+    const activeSession = await prisma.interactiveSession.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!activeSession || activeSession.hostId !== userId) {
+      return { success: false, error: "Unauthorized." };
+    }
+
+    if (activeSession.status !== "LOBBY") {
+      return { success: false, error: "Slides can only be edited while in lobby." };
+    }
+
+    // Delete existing slides safely
+    await prisma.sessionSlide.deleteMany({
+      where: { sessionId },
+    });
+
+    // Create the updated slide collection
+    await prisma.sessionSlide.createMany({
+      data: slides.map((s, idx) => ({
+        sessionId,
+        slideIndex: idx,
+        type: s.type,
+        title: s.title,
+        content: s.content || null,
+        options: s.options || undefined,
+        correctAnswer: s.correctAnswer || null,
+      })),
+    });
+
+    revalidatePath(`/documents/present/${sessionId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update slides:", error);
+    return { success: false, error: "Failed to update slides." };
+  }
+}
