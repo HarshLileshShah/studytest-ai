@@ -381,6 +381,283 @@ export function PresentClient({ sessionId }: { sessionId: string }) {
         <div className="text-center text-xs text-white/30 tracking-wider z-10">
           STUDYTEST AI © PRESENTATION SYSTEM ENGINE v1.2
         </div>
+
+        {/* ──── Slides Editor Overlay Modal (Rendered in LOBBY) ──── */}
+        {isEditorOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-6 animate-fade-in text-white">
+            <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-5xl w-full h-[85vh] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+              {/* Header */}
+              <div className="flex justify-between items-center border-b border-white/10 p-6">
+                <div className="flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-violet-400" />
+                  <h2 className="text-lg font-bold text-white">Customize Slide Deck</h2>
+                </div>
+                <button
+                  onClick={() => setIsEditorOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/5 text-white/60 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Editor Body */}
+              <div className="flex-1 flex overflow-hidden">
+                {/* Left Column: Slides List Sidebar */}
+                <div className="w-80 border-r border-white/10 flex flex-col justify-between p-4 bg-slate-950/40">
+                  <div className="flex-1 overflow-y-auto space-y-2.5 pr-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 block mb-1">
+                      Slides ({editSlidesList.length})
+                    </span>
+                    {editSlidesList.map((s, idx) => {
+                      const isActive = idx === editingSlideIndex;
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => setEditingSlideIndex(idx)}
+                          className={cn(
+                            "p-3 rounded-xl border transition-all text-left cursor-pointer flex items-center justify-between gap-3 relative group",
+                            isActive
+                              ? "bg-violet-600/10 border-violet-500 text-white"
+                              : "bg-white/[0.02] border-white/5 text-white/75 hover:bg-white/5 hover:text-white"
+                          )}
+                        >
+                          <div className="flex items-center gap-2.5 truncate">
+                            <span className="text-xs font-black text-white/30 shrink-0">
+                              {idx + 1}
+                            </span>
+                            <div className="truncate">
+                              <p className="text-xs font-bold truncate leading-snug">{s.title || "Untitled Slide"}</p>
+                              <span className="text-[9px] font-bold text-violet-400/90 uppercase tracking-widest">{s.type}</span>
+                            </div>
+                          </div>
+
+                          {/* Reorder / Delete Triggers */}
+                          <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moveSlide(idx, "up");
+                              }}
+                              disabled={idx === 0}
+                              className="p-1 rounded bg-white/5 hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 cursor-pointer"
+                              title="Move Up"
+                            >
+                              <ArrowUp className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                moveSlide(idx, "down");
+                              }}
+                              disabled={idx === editSlidesList.length - 1}
+                              className="p-1 rounded bg-white/5 hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 cursor-pointer"
+                              title="Move Down"
+                            >
+                              <ArrowDown className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteSlide(idx);
+                              }}
+                              disabled={editSlidesList.length <= 1}
+                              className="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 disabled:opacity-20 cursor-pointer"
+                              title="Delete Slide"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Add Slide Toolbar Menu */}
+                  <div className="border-t border-white/10 pt-4 mt-2.5 space-y-2">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-white/40 block mb-1">
+                      Add New Slide
+                    </span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => addSlide("INFO")}
+                        className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <Plus className="w-3 h-3 text-violet-400" /> Info
+                      </button>
+                      <button
+                        onClick={() => addSlide("MULTIPLE_CHOICE")}
+                        className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <Plus className="w-3 h-3 text-violet-400" /> MCQ Quiz
+                      </button>
+                      <button
+                        onClick={() => addSlide("WORD_CLOUD")}
+                        className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <Plus className="w-3 h-3 text-violet-400" /> Poll Tag
+                      </button>
+                      <button
+                        onClick={() => addSlide("Q_A")}
+                        className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                      >
+                        <Plus className="w-3 h-3 text-violet-400" /> Q&A
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Slide Editor Form */}
+                <div className="flex-1 overflow-y-auto p-6 bg-slate-900/40">
+                  {editSlidesList[editingSlideIndex] ? (
+                    <div className="space-y-6 max-w-2xl">
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-violet-400">
+                        Slide {editingSlideIndex + 1} Settings ({editSlidesList[editingSlideIndex].type})
+                      </h3>
+
+                      {/* Title Input */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-white/60">Slide Title</label>
+                        <input
+                          type="text"
+                          value={editSlidesList[editingSlideIndex].title || ""}
+                          onChange={(e) => {
+                            const list = [...editSlidesList];
+                            list[editingSlideIndex].title = e.target.value;
+                            setEditSlidesList(list);
+                          }}
+                          className="w-full px-4 py-2.5 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-sm"
+                          placeholder="e.g. Overview"
+                        />
+                      </div>
+
+                      {/* INFO Slide Bullet Points Input */}
+                      {editSlidesList[editingSlideIndex].type === "INFO" && (
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-white/60">Content Bullet Points (One per line)</label>
+                          <textarea
+                            rows={6}
+                            value={editSlidesList[editingSlideIndex].content || ""}
+                            onChange={(e) => {
+                              const list = [...editSlidesList];
+                              list[editingSlideIndex].content = e.target.value;
+                              setEditSlidesList(list);
+                            }}
+                            className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-sm font-sans resize-none"
+                            placeholder="- First key slide point
+- Second core point
+- Third takeaway note"
+                          />
+                        </div>
+                      )}
+
+                      {/* MCQ Slide Options & Correct Answer Input */}
+                      {editSlidesList[editingSlideIndex].type === "MULTIPLE_CHOICE" && (
+                        <div className="space-y-5">
+                          <div className="space-y-3">
+                            <label className="text-xs font-semibold text-white/60">Answer Choices</label>
+                            {(() => {
+                              const optionsArray = editSlidesList[editingSlideIndex].options 
+                                ? (typeof editSlidesList[editingSlideIndex].options === "string" 
+                                    ? JSON.parse(editSlidesList[editingSlideIndex].options) 
+                                    : editSlidesList[editingSlideIndex].options)
+                                : ["", "", "", ""];
+                              return [0, 1, 2, 3].map((optIdx) => (
+                                <div key={optIdx} className="flex items-center gap-3">
+                                  <span className="text-xs font-black text-white/30 w-5">
+                                    {String.fromCharCode(65 + optIdx)}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={optionsArray[optIdx] || ""}
+                                    onChange={(e) => {
+                                      const list = [...editSlidesList];
+                                      const currentOpts = [...optionsArray];
+                                      currentOpts[optIdx] = e.target.value;
+                                      list[editingSlideIndex].options = currentOpts;
+                                      setEditSlidesList(list);
+                                    }}
+                                    className="flex-1 px-4 py-2 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-xs"
+                                    placeholder={`Option Choice ${optIdx + 1}`}
+                                  />
+                                </div>
+                              ));
+                            })()}
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-xs font-semibold text-white/60">Correct Answer Selection</label>
+                            <select
+                              value={editSlidesList[editingSlideIndex].correctAnswer || ""}
+                              onChange={(e) => {
+                                const list = [...editSlidesList];
+                                list[editingSlideIndex].correctAnswer = e.target.value;
+                                setEditSlidesList(list);
+                              }}
+                              className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-xs cursor-pointer"
+                            >
+                              {(() => {
+                                const optionsArray = editSlidesList[editingSlideIndex].options 
+                                  ? (typeof editSlidesList[editingSlideIndex].options === "string" 
+                                      ? JSON.parse(editSlidesList[editingSlideIndex].options) 
+                                      : editSlidesList[editingSlideIndex].options)
+                                  : [];
+                                return optionsArray.map((opt: string, idx: number) => (
+                                  <option key={idx} value={opt}>
+                                    {opt ? opt : `Option Choice ${idx + 1}`}
+                                  </option>
+                                ));
+                              })()}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Word Cloud, Q&A, and Leaderboard description previews */}
+                      {editSlidesList[editingSlideIndex].type === "WORD_CLOUD" && (
+                        <p className="text-xs text-white/40 italic leading-relaxed">
+                          * Word Cloud slide displays keyword responses submitted by students dynamically sized based on vote counts. No extra content inputs required.
+                        </p>
+                      )}
+                      {editSlidesList[editingSlideIndex].type === "Q_A" && (
+                        <p className="text-xs text-white/40 italic leading-relaxed">
+                          * Audience Q&A slide opens up live comments where students can submit queries directly to the presenter screen. No extra content inputs required.
+                        </p>
+                      )}
+                      {editSlidesList[editingSlideIndex].type === "LEADERBOARD" && (
+                        <p className="text-xs text-white/40 italic leading-relaxed">
+                          * Leaderboard slide showcases the top classroom participants in a Gold, Silver, and Bronze podium. No extra content inputs required.
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-white/40 italic">Select a slide from the sidebar list to configure its layout properties.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer actions */}
+              <div className="border-t border-white/10 p-6 bg-slate-950/40 flex justify-between items-center">
+                <Button
+                  variant="outline"
+                  size="md"
+                  onClick={() => setIsEditorOpen(false)}
+                  className="border-white/10 text-white hover:bg-white/5 cursor-pointer"
+                >
+                  Discard Changes
+                </Button>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleSaveSlides}
+                  disabled={isPending}
+                  className="bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl cursor-pointer flex items-center gap-1.5"
+                >
+                  <Save className="w-4 h-4" /> Save Slide Customizations
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -807,283 +1084,6 @@ export function PresentClient({ sessionId }: { sessionId: string }) {
           )}
         </Button>
       </footer>
-
-      {/* ──── Slides Editor Overlay Modal ──── */}
-      {isEditorOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-6 animate-fade-in text-white">
-          <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-5xl w-full h-[85vh] flex flex-col justify-between shadow-2xl relative overflow-hidden">
-            {/* Header */}
-            <div className="flex justify-between items-center border-b border-white/10 p-6">
-              <div className="flex items-center gap-2">
-                <Settings className="w-5 h-5 text-violet-400" />
-                <h2 className="text-lg font-bold text-white">Customize Slide Deck</h2>
-              </div>
-              <button
-                onClick={() => setIsEditorOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/5 text-white/60 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Editor Body */}
-            <div className="flex-1 flex overflow-hidden">
-              {/* Left Column: Slides List Sidebar */}
-              <div className="w-80 border-r border-white/10 flex flex-col justify-between p-4 bg-slate-955/40">
-                <div className="flex-1 overflow-y-auto space-y-2.5 pr-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 block mb-1">
-                    Slides ({editSlidesList.length})
-                  </span>
-                  {editSlidesList.map((s, idx) => {
-                    const isActive = idx === editingSlideIndex;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => setEditingSlideIndex(idx)}
-                        className={cn(
-                          "p-3 rounded-xl border transition-all text-left cursor-pointer flex items-center justify-between gap-3 relative group",
-                          isActive
-                            ? "bg-violet-600/10 border-violet-500 text-white"
-                            : "bg-white/[0.02] border-white/5 text-white/75 hover:bg-white/5 hover:text-white"
-                        )}
-                      >
-                        <div className="flex items-center gap-2.5 truncate">
-                          <span className="text-xs font-black text-white/30 shrink-0">
-                            {idx + 1}
-                          </span>
-                          <div className="truncate">
-                            <p className="text-xs font-bold truncate leading-snug">{s.title || "Untitled Slide"}</p>
-                            <span className="text-[9px] font-bold text-violet-400/90 uppercase tracking-widest">{s.type}</span>
-                          </div>
-                        </div>
-
-                        {/* Reorder / Delete Triggers */}
-                        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              moveSlide(idx, "up");
-                            }}
-                            disabled={idx === 0}
-                            className="p-1 rounded bg-white/5 hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 cursor-pointer"
-                            title="Move Up"
-                          >
-                            <ArrowUp className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              moveSlide(idx, "down");
-                            }}
-                            disabled={idx === editSlidesList.length - 1}
-                            className="p-1 rounded bg-white/5 hover:bg-white/10 text-white/60 hover:text-white disabled:opacity-20 cursor-pointer"
-                            title="Move Down"
-                          >
-                            <ArrowDown className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteSlide(idx);
-                            }}
-                            disabled={editSlidesList.length <= 1}
-                            className="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 disabled:opacity-20 cursor-pointer"
-                            title="Delete Slide"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Add Slide Toolbar Menu */}
-                <div className="border-t border-white/10 pt-4 mt-2.5 space-y-2">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-white/40 block mb-1">
-                    Add New Slide
-                  </span>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => addSlide("INFO")}
-                      className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <Plus className="w-3 h-3 text-violet-400" /> Info
-                    </button>
-                    <button
-                      onClick={() => addSlide("MULTIPLE_CHOICE")}
-                      className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <Plus className="w-3 h-3 text-violet-400" /> MCQ Quiz
-                    </button>
-                    <button
-                      onClick={() => addSlide("WORD_CLOUD")}
-                      className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <Plus className="w-3 h-3 text-violet-400" /> Poll Tag
-                    </button>
-                    <button
-                      onClick={() => addSlide("Q_A")}
-                      className="py-1.5 px-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <Plus className="w-3 h-3 text-violet-400" /> Q&A
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Slide Editor Form */}
-              <div className="flex-1 overflow-y-auto p-6 bg-slate-900/40">
-                {editSlidesList[editingSlideIndex] ? (
-                  <div className="space-y-6 max-w-2xl">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-violet-400">
-                      Slide {editingSlideIndex + 1} Settings ({editSlidesList[editingSlideIndex].type})
-                    </h3>
-
-                    {/* Title Input */}
-                    <div className="space-y-2">
-                      <label className="text-xs font-semibold text-white/60">Slide Title</label>
-                      <input
-                        type="text"
-                        value={editSlidesList[editingSlideIndex].title || ""}
-                        onChange={(e) => {
-                          const list = [...editSlidesList];
-                          list[editingSlideIndex].title = e.target.value;
-                          setEditSlidesList(list);
-                        }}
-                        className="w-full px-4 py-2.5 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-sm animate-scale-up"
-                        placeholder="e.g. Overview"
-                      />
-                    </div>
-
-                    {/* INFO Slide Bullet Points Input */}
-                    {editSlidesList[editingSlideIndex].type === "INFO" && (
-                      <div className="space-y-2">
-                        <label className="text-xs font-semibold text-white/60">Content Bullet Points (One per line)</label>
-                        <textarea
-                          rows={6}
-                          value={editSlidesList[editingSlideIndex].content || ""}
-                          onChange={(e) => {
-                            const list = [...editSlidesList];
-                            list[editingSlideIndex].content = e.target.value;
-                            setEditSlidesList(list);
-                          }}
-                          className="w-full px-4 py-3 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-sm font-sans resize-none"
-                          placeholder="- First key slide point
-- Second core point
-- Third takeaway note"
-                        />
-                      </div>
-                    )}
-
-                    {/* MCQ Slide Options & Correct Answer Input */}
-                    {editSlidesList[editingSlideIndex].type === "MULTIPLE_CHOICE" && (
-                      <div className="space-y-5">
-                        <div className="space-y-3">
-                          <label className="text-xs font-semibold text-white/60">Answer Choices</label>
-                          {(() => {
-                            const optionsArray = editSlidesList[editingSlideIndex].options 
-                              ? (typeof editSlidesList[editingSlideIndex].options === "string" 
-                                  ? JSON.parse(editSlidesList[editingSlideIndex].options) 
-                                  : editSlidesList[editingSlideIndex].options)
-                              : ["", "", "", ""];
-                            return [0, 1, 2, 3].map((optIdx) => (
-                              <div key={optIdx} className="flex items-center gap-3">
-                                <span className="text-xs font-black text-white/30 w-5">
-                                  {String.fromCharCode(65 + optIdx)}
-                                </span>
-                                <input
-                                  type="text"
-                                  value={optionsArray[optIdx] || ""}
-                                  onChange={(e) => {
-                                    const list = [...editSlidesList];
-                                    const currentOpts = [...optionsArray];
-                                    currentOpts[optIdx] = e.target.value;
-                                    list[editingSlideIndex].options = currentOpts;
-                                    setEditSlidesList(list);
-                                  }}
-                                  className="flex-1 px-4 py-2 bg-slate-950/80 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-xs"
-                                  placeholder={`Option Choice ${optIdx + 1}`}
-                                />
-                              </div>
-                            ));
-                          })()}
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-xs font-semibold text-white/60">Correct Answer Selection</label>
-                          <select
-                            value={editSlidesList[editingSlideIndex].correctAnswer || ""}
-                            onChange={(e) => {
-                              const list = [...editSlidesList];
-                              list[editingSlideIndex].correctAnswer = e.target.value;
-                              setEditSlidesList(list);
-                            }}
-                            className="w-full px-4 py-2.5 bg-slate-955 border border-white/10 focus:border-violet-500 rounded-xl outline-none text-white text-xs cursor-pointer"
-                          >
-                            {(() => {
-                              const optionsArray = editSlidesList[editingSlideIndex].options 
-                                ? (typeof editSlidesList[editingSlideIndex].options === "string" 
-                                    ? JSON.parse(editSlidesList[editingSlideIndex].options) 
-                                    : editSlidesList[editingSlideIndex].options)
-                                : [];
-                              return optionsArray.map((opt: string, idx: number) => (
-                                <option key={idx} value={opt}>
-                                  {opt ? opt : `Option Choice ${idx + 1}`}
-                                </option>
-                              ));
-                            })()}
-                          </select>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Word Cloud, Q&A, and Leaderboard description previews */}
-                    {editSlidesList[editingSlideIndex].type === "WORD_CLOUD" && (
-                      <p className="text-xs text-white/40 italic leading-relaxed">
-                        * Word Cloud slide displays keyword responses submitted by students dynamically sized based on vote counts. No extra content inputs required.
-                      </p>
-                    )}
-                    {editSlidesList[editingSlideIndex].type === "Q_A" && (
-                      <p className="text-xs text-white/40 italic leading-relaxed">
-                        * Audience Q&A slide opens up live comments where students can submit queries directly to the presenter screen. No extra content inputs required.
-                      </p>
-                    )}
-                    {editSlidesList[editingSlideIndex].type === "LEADERBOARD" && (
-                      <p className="text-xs text-white/40 italic leading-relaxed">
-                        * Leaderboard slide showcases the top classroom participants in a Gold, Silver, and Bronze podium. No extra content inputs required.
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-sm text-white/40 italic">Select a slide from the sidebar list to configure its layout properties.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Footer actions */}
-            <div className="border-t border-white/10 p-6 bg-slate-950/40 flex justify-between items-center">
-              <Button
-                variant="outline"
-                size="md"
-                onClick={() => setIsEditorOpen(false)}
-                className="border-white/10 text-white hover:bg-white/5 cursor-pointer"
-              >
-                Discard Changes
-              </Button>
-              <Button
-                variant="primary"
-                size="md"
-                onClick={handleSaveSlides}
-                disabled={isPending}
-                className="bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl cursor-pointer flex items-center gap-1.5"
-              >
-                <Save className="w-4 h-4" /> Save Slide Customizations
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
