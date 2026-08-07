@@ -64,23 +64,34 @@ function createTdd() {
     new Paragraph({
       text: "Table of Contents",
       heading: HeadingLevel.HEADING_1,
-      spacing: { before: 600, after: 200 },
+      spacing: { before: 600, after: 300 },
     }),
     new Paragraph({
-      spacing: { after: 100 },
+      spacing: { after: 150 },
       children: [
-        new TextRun({ text: "1. Executive Summary\n", bold: true, size: 24 }),
-        new TextRun({ text: "2. Background & Problem Statement\n", bold: true, size: 24 }),
-        new TextRun({ text: "3. Goals & Non-Goals\n", bold: true, size: 24 }),
-        new TextRun({ text: "4. User Stories\n", bold: true, size: 24 }),
-        new TextRun({ text: "5. Functional & Non-Functional Requirements\n", bold: true, size: 24 }),
-        new TextRun({ text: "6. High-Level Architecture & Tech Stack\n", bold: true, size: 24 }),
-        new TextRun({ text: "7. System Components & Interface Design\n", bold: true, size: 24 }),
-        new TextRun({ text: "8. AI Pipeline & Gateway Routing\n", bold: true, size: 24 }),
-        new TextRun({ text: "9. API Design & Security Configurations\n", bold: true, size: 24 }),
-        new TextRun({ text: "10. Performance, Scale & Logging\n", bold: true, size: 24 }),
-        new TextRun({ text: "11. Testing Strategy & Design Decisions\n", bold: true, size: 24 }),
-        new TextRun({ text: "12. Future Enhancements & Appendix\n", bold: true, size: 24 }),
+        new TextRun({ text: "1. Executive Summary .......................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "2. Background & Problem Statement ........................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "3. Goals ........................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "4. Non-Goals ....................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "5. User Stories .................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "6. Functional Requirements ..................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "7. Non-Functional Requirements ..............................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "8. High-Level Architecture ...................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "9. Technology Stack ............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "10. System Components .......................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "11. Frontend Design .............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "12. Backend Design ..............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "13. Database Design .............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "14. AI Pipeline ..................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "15. API Design ...................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "16. Error Handling .............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "17. Security .....................................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "18. Performance & Scalability .................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "19. Monitoring & Logging .......................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "20. Testing Strategy ............................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "21. Future Enhancements .......................................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "22. Trade-offs & Design Decisions .............................................................................\n", bold: true, size: 24 }),
+        new TextRun({ text: "23. Appendix .....................................................................................................\n", bold: true, size: 24 }),
       ],
     }),
 
@@ -116,33 +127,41 @@ function createTdd() {
       ],
     }),
 
-    // --- GOALS & NON-GOALS ---
+    // --- GOALS ---
     new Paragraph({
-      text: "3. Goals & Non-Goals",
+      text: "3. Goals",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "3.1 Project Goals\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Standardize Visual PDF Parsing: Support parsing multi-page documents and converting pages to base64 images for OCR extraction.\n", size: 24 }),
-        new TextRun({ text: "• Unified AI Gateways: Allow users to securely provide their own keys (BYOK model) dynamically saved in browser cookie variables.\n", size: 24 }),
-        new TextRun({ text: "• Live Interactive Deck: Sync presenters with student devices over rapid polling loops with distinct poll, quiz, Q&A, and leaderboard states.\n", size: 24 }),
+        new TextRun({
+          text: "The main objectives of StudyTest AI are to standardize visual PDF document content parsing via OCR, establish dynamically routed cookie-driven BYOK AI API completions gateways, and facilitate low-latency multiplayer presentation decks syncing over standard serverless hosting layers.",
+          size: 24,
+        }),
       ],
     }),
+
+    // --- NON-GOALS ---
     new Paragraph({
-      spacing: { after: 200, left: 360 },
+      text: "4. Non-Goals",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "3.2 Non-Goals\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Built-in Video Conferencing: Hosting audio/video streams is out of scope; the presentation engine assumes screen sharing or physical classrooms.\n", size: 24 }),
-        new TextRun({ text: "• Permanent File Hosting: The system acts as a processor; heavy file storage hosting remains out of bounds.\n", size: 24 }),
+        new TextRun({
+          text: "Building custom streaming video panels, permanent storage hosts, or third-party email campaign servers are explicitly excluded from the product architecture design scope.",
+          size: 24,
+        }),
       ],
     }),
 
     // --- USER STORIES ---
     new Paragraph({
-      text: "4. User Stories",
+      text: "5. User Stories",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
@@ -168,30 +187,9 @@ function createTdd() {
       ],
     }),
 
-    // --- REQUIREMENTS ---
+    // --- FUNCTIONAL REQUIREMENTS ---
     new Paragraph({
-      text: "5. Functional & Non-Functional Requirements",
-      heading: HeadingLevel.HEADING_1,
-      spacing: { before: 600, after: 200 },
-    }),
-    new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "5.1 Functional Requirements\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Render dynamic presentations with instant slide customizations (add, delete, reorder slides).\n• Handle distinct POLL and MULTIPLE_CHOICE slide structures (polls display live votes without score calculations; quiz slides award 100 points for correct submissions).\n• Support audience Q&A submission boards with presenter-approved moderations and upvotes.\n", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 200, left: 360 },
-      children: [
-        new TextRun({ text: "5.2 Non-Functional Requirements\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Synchronization Latency: Interactive slide state updates must propagate to student clients within a target threshold of 1.5 seconds.\n• High-Contrast Premium Theme: Responsive visual interfaces optimized for mobile and desktop viewports utilizing sleek dark themes.\n", size: 24 }),
-      ],
-    }),
-
-    // --- HIGH-LEVEL ARCHITECTURE ---
-    new Paragraph({
-      text: "6. High-Level Architecture & Tech Stack",
+      text: "6. Functional Requirements",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
@@ -199,7 +197,39 @@ function createTdd() {
       spacing: { after: 200 },
       children: [
         new TextRun({
-          text: "StudyTest AI is architected as a Next.js web application utilizing Neon serverless PostgreSQL storage, Auth.js for session validation, and Prisma ORM client mappings.",
+          text: "The platform must support instant slide customizer modifications (adding/ordering slides), separated POLL and MULTIPLE_CHOICE slide presentation behaviors, live tag-cloud submissions, and upvoteable moderator-approved audience Q&A questions.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- NON-FUNCTIONAL REQUIREMENTS ---
+    new Paragraph({
+      text: "7. Non-Functional Requirements",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Student live session updates must sync within a 1.5-second polling interval limit. User credentials must remain secure under Auth.js encrypted cookies. The visual theme must deliver high contrast dark modes conforming to premium responsive CSS layout rules.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- HIGH-LEVEL ARCHITECTURE ---
+    new Paragraph({
+      text: "8. High-Level Architecture",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "The application is built on top of the modern Next.js framework (utilizing App Router structure) for optimized routing, server actions execution, and static page optimizations. Below is the architecture flow mapping frontend clients, server actions controllers, database ORMs, and external API gateways:",
           size: 24,
         }),
       ],
@@ -231,37 +261,89 @@ function createTdd() {
       ],
     }),
 
-    // --- SYSTEM COMPONENTS ---
+    // --- TECHNOLOGY STACK ---
     new Paragraph({
-      text: "7. System Components & Interface Design",
+      text: "9. Technology Stack",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "7.1 Frontend Component Design\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Presenter Client: Controls Lobby status, slide transitions, results displays, and customizer slide lists.\n• Student Client: Polling loop updates slide views dynamically, displaying voting cards and input fields.\n", size: 24 }),
+        new TextRun({
+          text: "• Core: Next.js (App Router), React, TypeScript\n• Styling: Vanilla CSS, Tailwind CSS Variables\n• Database: Neon Serverless PostgreSQL\n• ORM: Prisma Client\n• Security: Auth.js (NextAuth v5)\n• AI Gateway: Custom BYOK dynamic completions proxy router",
+          size: 24,
+        }),
       ],
     }),
+
+    // --- SYSTEM COMPONENTS ---
     new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "7.2 Backend Component Design\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Server Actions Controllers: Transactional routes executing state logic (join lobbies, submit answers, advanced slides).\n", size: 24 }),
-      ],
+      text: "10. System Components",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 200, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "7.3 Database schema design\n", bold: true, size: 24 }),
-        new TextRun({ text: "• InteractiveSession: maps session lobby settings.\n• SessionSlide: tracks indices, types, options, and correct answers.\n• SessionParticipant & SessionResponse: tracks connected sockets/profiles, scores, and votes.\n", size: 24 }),
+        new TextRun({
+          text: "The platform comprises three major integrated components: the self-guided study system (handling quiz generation, diagnostic tracking, and flashcards), the interactive presenter engine (managing lobbies, slide decks, and real-time customizers), and the dynamic AI pipeline middleware.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- FRONTEND DESIGN ---
+    new Paragraph({
+      text: "11. Frontend Design",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Components are built using React and Zustand for state sync. The Presenter UI handles custom slides list states. The Student View uses low-overhead polling updates to reconstruct views dynamically based on the current presenter slide index.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- BACKEND DESIGN ---
+    new Paragraph({
+      text: "12. Backend Design",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Built on top of Next.js Server Actions, backend routes act as transaction controllers. They process actions asynchronously, check auth context, update PostgreSQL schemas, and push updates safely to target clients.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- DATABASE DESIGN ---
+    new Paragraph({
+      text: "13. Database Design",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Prisma schema includes: User, Document, StudyPlanner, FlashcardDeck, InteractiveSession (holds lobby properties), SessionSlide (tracks indices, types, option arrays, correct answers), SessionParticipant, SessionResponse (stores student votes/quiz scores), and SessionQA (holds live audience questions).",
+          size: 24,
+        }),
       ],
     }),
 
     // --- AI PIPELINE ---
     new Paragraph({
-      text: "8. AI Pipeline & Gateway Routing",
+      text: "14. AI Pipeline",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
@@ -275,52 +357,19 @@ function createTdd() {
       ],
     }),
 
-    // --- API DESIGN & SECURITY ---
+    // --- API DESIGN ---
     new Paragraph({
-      text: "9. API Design & Security Configurations",
+      text: "15. API Design",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "9.1 API Server Actions Interfaces\n", bold: true, size: 24 }),
-        new TextRun({ text: "• submitSlideResponseAction(slideId, value, participantUserId): Records poll selections or quiz grades.\n• updateSessionSlidesAction(sessionId, slides): Recreates slide array lists inside a transaction.\n", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "9.2 Error Handling & Resilience\n", bold: true, size: 24 }),
-        new TextRun({ text: "If an LLM OCR parser request times out, the backend defaults to standard dynamic text outlines automatically to protect user workflow continuity.", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 200, left: 360 },
-      children: [
-        new TextRun({ text: "9.3 Security Specifications\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Auth.js validates credentials securely using encrypted cookies.\n• Host checking restricts local Ollama configurations only to 'localhost' connections, avoiding security exposures on public URLs.\n", size: 24 }),
-      ],
-    }),
-
-    // --- PERFORMANCE, SCALE & LOGGING ---
-    new Paragraph({
-      text: "10. Performance, Scale & Logging",
-      heading: HeadingLevel.HEADING_1,
-      spacing: { before: 600, after: 200 },
-    }),
-    new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "10.1 Performance & Scalability\n", bold: true, size: 24 }),
-        new TextRun({ text: "To support large concurrent sessions, Prisma database connections are pooled, and static page caching is applied to dashboard and document outline screens. The 1.5s student sync poll queries a lightweight session state view, reducing write contention.", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 200, left: 360 },
-      children: [
-        new TextRun({ text: "10.2 Monitoring & Logging\n", bold: true, size: 24 }),
-        new TextRun({ text: "Backend service processes log structured JSON messages describing request targets, LLM latency metrics, and database transactional execution times for easy monitoring.", size: 24 }),
+        new TextRun({
+          text: "• submitSlideResponseAction(slideId, value, participantUserId): Records quiz choices or poll selections.\n• updateSessionSlidesAction(sessionId, slides): Handles slide customizations inside a Prisma transaction block.\n• advanceSlideAction(sessionId, direction): Advances slide numbers.",
+          size: 24,
+        }),
       ],
     }),
     // Embedded Live Session Sync Flow Diagram
@@ -350,45 +399,131 @@ function createTdd() {
       ],
     }),
 
-    // --- TESTING & DESIGN DECISIONS ---
+    // --- ERROR HANDLING ---
     new Paragraph({
-      text: "11. Testing Strategy & Design Decisions",
+      text: "16. Error Handling",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "11.1 Testing Strategy\n", bold: true, size: 24 }),
-        new TextRun({ text: "The strategy combines unit tests for AI parsers, integration tests for server action database inserts, and local E2E simulation of student joining flows.", size: 24 }),
+        new TextRun({
+          text: "If an LLM parser request fails, visual outlines fall back to default dynamic structures. Database connection retries and transactional rollbacks protect student slide lobby submissions.",
+          size: 24,
+        }),
       ],
     }),
+
+    // --- SECURITY ---
     new Paragraph({
-      spacing: { after: 200, left: 360 },
+      text: "17. Security",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "11.2 Trade-offs & Design Decisions\n", bold: true, size: 24 }),
-        new TextRun({ text: "• Polling vs. WebSockets: Polling was selected over WebSockets to allow standard serverless action scales on Vercel without configuring separate sticky session servers.\n• Cookie Key Storage: Keeps keys local to browser, ensuring zero compliance overhead for backend database storage.\n", size: 24 }),
+        new TextRun({
+          text: "Cookie-stored API keys prevent server compliance risks. Auth.js secures student profile paths. Host validation rules restrict Local Ollama configurations solely to 'localhost' bindings, blocking external network access.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- PERFORMANCE & SCALABILITY ---
+    new Paragraph({
+      text: "18. Performance & Scalability",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Connection pools are managed through serverless Neon endpoints. Polling routes fetch lightweight state representations to minimize lock contentions, enabling seamless multiplayer scaling under heavy workloads.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- MONITORING & LOGGING ---
+    new Paragraph({
+      text: "19. Monitoring & Logging",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Server processes write formatted logs tracking LLM response times, database write transaction metrics, and polling network load factors.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- TESTING STRATEGY ---
+    new Paragraph({
+      text: "20. Testing Strategy",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "The testing matrix combines unit verification for OCR visual models, transactional integration testing for database schemas, and end-to-end simulation of student joining flows.",
+          size: 24,
+        }),
       ],
     }),
 
     // --- FUTURE ENHANCEMENTS ---
     new Paragraph({
-      text: "12. Future Enhancements & Appendix",
+      text: "21. Future Enhancements",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 360 },
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "12.1 Future Enhancements\n", bold: true, size: 24 }),
-        new TextRun({ text: "• WebRTC sync channels for instantaneous presentations updates.\n• Advanced AI document processing models with audio-out narration support.\n", size: 24 }),
+        new TextRun({
+          text: "Planned upgrades include WebRTC channels for instantaneous real-time presentation events and multi-lingual voice advisor generation.",
+          size: 24,
+        }),
       ],
     }),
+
+    // --- TRADE-OFFS & DESIGN DECISIONS ---
     new Paragraph({
-      spacing: { after: 200, left: 360 },
+      text: "22. Trade-offs & Design Decisions",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
       children: [
-        new TextRun({ text: "12.2 Appendix\n", bold: true, size: 24 }),
-        new TextRun({ text: "Contains instructions for running local Ollama servers: bind network interfaces via 'OLLAMA_HOST=0.0.0.0 ollama serve' and expose it via localtunnel tunnels.", size: 24 }),
+        new TextRun({
+          text: "WebSockets vs Polling: Standard polling (1.5s interval) was chosen over WebSocket sockets to fit serverless Vercel host runtimes directly without sticky servers. Cookie storage was chosen over database persistence for security and ease of compliance.",
+          size: 24,
+        }),
+      ],
+    }),
+
+    // --- APPENDIX ---
+    new Paragraph({
+      text: "23. Appendix",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "Includes details for configuring local Ollama servers (network bindings, port exposures) and Prisma db push commands.",
+          size: 24,
+        }),
       ],
     }),
   ];
@@ -411,7 +546,7 @@ Packer.toBuffer(doc)
   .then((buffer) => {
     const filePath = path.join(process.cwd(), "Technical_Design_Document.docx");
     fs.writeFileSync(filePath, buffer);
-    console.log(`Successfully generated Technical Design Document with all requested chapters: ${filePath}`);
+    console.log(`Successfully generated Technical Design Document with TOC formatted properly: ${filePath}`);
   })
   .catch((err) => {
     console.error("Failed to generate DOCX document:", err);
