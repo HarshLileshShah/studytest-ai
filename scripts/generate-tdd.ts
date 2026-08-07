@@ -5,7 +5,7 @@ import * as path from "path";
 // Main Document Builder
 function createTdd() {
   const sections = [
-    // --- 1. TITLE PAGE ---
+    // --- TITLE PAGE ---
     new Paragraph({
       alignment: AlignmentType.CENTER,
       spacing: { before: 1200, after: 300 },
@@ -23,9 +23,9 @@ function createTdd() {
       spacing: { after: 1200 },
       children: [
         new TextRun({
-          text: "TECHNICAL DESIGN DOCUMENT",
+          text: "COMPREHENSIVE TECHNICAL DESIGN DOCUMENT",
           bold: true,
-          size: 32,
+          size: 28,
           color: "4B5563",
         }),
       ],
@@ -35,7 +35,7 @@ function createTdd() {
       spacing: { after: 1200 },
       children: [
         new TextRun({
-          text: "AI-Powered Learning Platform & Real-Time Classroom Presentation Engine",
+          text: "An AI-Powered Learning Platform and Interactive Presentation Engine",
           size: 20,
           italics: true,
           color: "6B7280",
@@ -44,23 +44,47 @@ function createTdd() {
     }),
     new Paragraph({
       alignment: AlignmentType.LEFT,
-      spacing: { before: 2400 },
+      spacing: { before: 2000 },
       children: [
         new TextRun({ text: "Author: ", bold: true, size: 24 }),
-        new TextRun({ text: "StudyTest AI Development Team\n", size: 24 }),
-        new TextRun({ text: "OS Target: ", bold: true, size: 24 }),
-        new TextRun({ text: "macOS Target Compilation\n", size: 24 }),
+        new TextRun({ text: "StudyTest AI Architecture Team\n", size: 24 }),
+        new TextRun({ text: "OS Platform: ", bold: true, size: 24 }),
+        new TextRun({ text: "macOS Core Target\n", size: 24 }),
         new TextRun({ text: "Version: ", bold: true, size: 24 }),
-        new TextRun({ text: "1.4.0 (Stable Release)\n", size: 24 }),
+        new TextRun({ text: "1.5.0 (Enterprise Specification)\n", size: 24 }),
         new TextRun({ text: "Date: ", bold: true, size: 24 }),
         new TextRun({ text: new Date().toLocaleDateString() + "\n", size: 24 }),
       ],
     }),
 
-    // --- Page Break ---
-    new Paragraph({ text: "", spacing: { before: 100 } }), // Placeholder for page break spacer
+    // --- Page Spacer ---
+    new Paragraph({ text: "", spacing: { before: 100 } }),
 
-    // --- 2. EXECUTIVE SUMMARY ---
+    // --- TABLE OF CONTENTS ---
+    new Paragraph({
+      text: "Table of Contents",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 100 },
+      children: [
+        new TextRun({ text: "1. Executive Summary\n", bold: true, size: 24 }),
+        new TextRun({ text: "2. Background & Problem Statement\n", bold: true, size: 24 }),
+        new TextRun({ text: "3. Goals & Non-Goals\n", bold: true, size: 24 }),
+        new TextRun({ text: "4. User Stories\n", bold: true, size: 24 }),
+        new TextRun({ text: "5. Functional & Non-Functional Requirements\n", bold: true, size: 24 }),
+        new TextRun({ text: "6. High-Level Architecture & Tech Stack\n", bold: true, size: 24 }),
+        new TextRun({ text: "7. System Components & Interface Design\n", bold: true, size: 24 }),
+        new TextRun({ text: "8. AI Pipeline & Gateway Routing\n", bold: true, size: 24 }),
+        new TextRun({ text: "9. API Design & Security Configurations\n", bold: true, size: 24 }),
+        new TextRun({ text: "10. Performance, Scale & Logging\n", bold: true, size: 24 }),
+        new TextRun({ text: "11. Testing Strategy & Design Decisions\n", bold: true, size: 24 }),
+        new TextRun({ text: "12. Future Enhancements & Appendix\n", bold: true, size: 24 }),
+      ],
+    }),
+
+    // --- EXECUTIVE SUMMARY ---
     new Paragraph({
       text: "1. Executive Summary",
       heading: HeadingLevel.HEADING_1,
@@ -70,15 +94,15 @@ function createTdd() {
       spacing: { after: 200 },
       children: [
         new TextRun({
-          text: "StudyTest AI is a premium, state-of-the-art educational tech platform designed to simplify material assimilation through artificial intelligence. By uploading study documents (PDFs), students can generate personalized mock quizzes, create customizable flashcard decks, chat with an interactive tutor, and schedule smart study plans. For teachers and educators, the platform provides a complete real-time classroom presentation engine (matching Mentimeter core features) to host live slide shows, multiple choice quizzes, keyword word clouds, surveys, and upvoteable audience Q&A sessions.",
+          text: "StudyTest AI is a premium educational technology platform designed to streamline material assimilation through automated artificial intelligence pipelines. The platform targets two user personas: Students (who need contextual tutoring, mock quiz attempts, smart study planning calendar tools, and gamified flashcards) and Presenters/Teachers (who host live interactive sessions containing bullet point outlines, multiple choice quiz tournaments, real-time polls, tag cloud visualizers, and audience Q&A boards).",
           size: 24,
         }),
       ],
     }),
 
-    // --- 3. SYSTEM ARCHITECTURE DESIGN ---
+    // --- BACKGROUND & PROBLEM STATEMENT ---
     new Paragraph({
-      text: "2. System Architecture Design",
+      text: "2. Background & Problem Statement",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
@@ -86,30 +110,98 @@ function createTdd() {
       spacing: { after: 200 },
       children: [
         new TextRun({
-          text: "The application is built on top of the modern Next.js framework (utilizing App Router structure) for optimized routing, server actions execution, and static page optimizations. Below are the key architectural layers:",
+          text: "Traditional learning methodologies fail to keep students engaged during remote self-study and classroom instruction. Study materials (such as long PDFs and textbook chapters) are dry and hard to structure, while interactive classroom tools (like Mentimeter) are disconnected from self-study outlines. StudyTest AI bridges this gap by merging a document processing AI engine with an E2E real-time multiplayer slide deck engine so that study resources feed directly into quiz game rooms and live sessions.",
           size: 24,
         }),
       ],
     }),
+
+    // --- GOALS & NON-GOALS ---
+    new Paragraph({
+      text: "3. Goals & Non-Goals",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "3.1 Project Goals\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Standardize Visual PDF Parsing: Support parsing multi-page documents and converting pages to base64 images for OCR extraction.\n", size: 24 }),
+        new TextRun({ text: "• Unified AI Gateways: Allow users to securely provide their own keys (BYOK model) dynamically saved in browser cookie variables.\n", size: 24 }),
+        new TextRun({ text: "• Live Interactive Deck: Sync presenters with student devices over rapid polling loops with distinct poll, quiz, Q&A, and leaderboard states.\n", size: 24 }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 200, left: 360 },
+      children: [
+        new TextRun({ text: "3.2 Non-Goals\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Built-in Video Conferencing: Hosting audio/video streams is out of scope; the presentation engine assumes screen sharing or physical classrooms.\n", size: 24 }),
+        new TextRun({ text: "• Permanent File Hosting: The system acts as a processor; heavy file storage hosting remains out of bounds.\n", size: 24 }),
+      ],
+    }),
+
+    // --- USER STORIES ---
+    new Paragraph({
+      text: "4. User Stories",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
     new Paragraph({
       spacing: { after: 150, left: 720 },
       children: [
-        new TextRun({ text: "• Client Component Layer: ", bold: true, size: 24 }),
-        new TextRun({ text: "Built with React client views, Lucide icons, and Vanilla/Tailwind CSS variables for a premium dark mode aesthetic. Handles real-time polling sync loops (1.5-second intervals) for interactive slideshow synchronization.", size: 24 }),
+        new TextRun({ text: "• As an Educator, ", bold: true, size: 24 }),
+        new TextRun({ text: "I want to create customized slide decks with information bullets, MCQ quizzes, and survey polls so that I can gauge class comprehension in real time.", size: 24 }),
       ],
     }),
     new Paragraph({
       spacing: { after: 150, left: 720 },
       children: [
-        new TextRun({ text: "• Server Actions Controllers: ", bold: true, size: 24 }),
-        new TextRun({ text: "Next.js server-side modules that execute secure transactional commands (document uploading, live slide updates, quiz creations) directly interfacing with the Prisma client.", size: 24 }),
+        new TextRun({ text: "• As a Student, ", bold: true, size: 24 }),
+        new TextRun({ text: "I want to join multiplayer quiz lobbies via sharing codes, submit answers, and see my rank on leaderboards to stay motivated.", size: 24 }),
       ],
     }),
     new Paragraph({
       spacing: { after: 200, left: 720 },
       children: [
-        new TextRun({ text: "• Database ORM Layer: ", bold: true, size: 24 }),
-        new TextRun({ text: "Prisma client connecting to a Neon PostgreSQL instance. Enables transactional queries, cascade deletions, and relational syncs.", size: 24 }),
+        new TextRun({ text: "• As a Student, ", bold: true, size: 24 }),
+        new TextRun({ text: "I want to upload a PDF textbook outline, auto-generate flashcards, and study them with gamified score systems.", size: 24 }),
+      ],
+    }),
+
+    // --- REQUIREMENTS ---
+    new Paragraph({
+      text: "5. Functional & Non-Functional Requirements",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "5.1 Functional Requirements\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Render dynamic presentations with instant slide customizations (add, delete, reorder slides).\n• Handle distinct POLL and MULTIPLE_CHOICE slide structures (polls display live votes without score calculations; quiz slides award 100 points for correct submissions).\n• Support audience Q&A submission boards with presenter-approved moderations and upvotes.\n", size: 24 }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 200, left: 360 },
+      children: [
+        new TextRun({ text: "5.2 Non-Functional Requirements\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Synchronization Latency: Interactive slide state updates must propagate to student clients within a target threshold of 1.5 seconds.\n• High-Contrast Premium Theme: Responsive visual interfaces optimized for mobile and desktop viewports utilizing sleek dark themes.\n", size: 24 }),
+      ],
+    }),
+
+    // --- HIGH-LEVEL ARCHITECTURE ---
+    new Paragraph({
+      text: "6. High-Level Architecture & Tech Stack",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 200 },
+      children: [
+        new TextRun({
+          text: "StudyTest AI is architected as a Next.js web application utilizing Neon serverless PostgreSQL storage, Auth.js for session validation, and Prisma ORM client mappings.",
+          size: 24,
+        }),
       ],
     }),
     // Embedded System Architecture Diagram
@@ -139,9 +231,37 @@ function createTdd() {
       ],
     }),
 
-    // --- 4. DATABASE ARCHITECTURE ---
+    // --- SYSTEM COMPONENTS ---
     new Paragraph({
-      text: "3. Database Schema Architecture",
+      text: "7. System Components & Interface Design",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "7.1 Frontend Component Design\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Presenter Client: Controls Lobby status, slide transitions, results displays, and customizer slide lists.\n• Student Client: Polling loop updates slide views dynamically, displaying voting cards and input fields.\n", size: 24 }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "7.2 Backend Component Design\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Server Actions Controllers: Transactional routes executing state logic (join lobbies, submit answers, advanced slides).\n", size: 24 }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 200, left: 360 },
+      children: [
+        new TextRun({ text: "7.3 Database schema design\n", bold: true, size: 24 }),
+        new TextRun({ text: "• InteractiveSession: maps session lobby settings.\n• SessionSlide: tracks indices, types, options, and correct answers.\n• SessionParticipant & SessionResponse: tracks connected sockets/profiles, scores, and votes.\n", size: 24 }),
+      ],
+    }),
+
+    // --- AI PIPELINE ---
+    new Paragraph({
+      text: "8. AI Pipeline & Gateway Routing",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
@@ -149,58 +269,58 @@ function createTdd() {
       spacing: { after: 200 },
       children: [
         new TextRun({
-          text: "The database models are structured to scale and support multiplayer sessions. The main relations are described below:",
+          text: "The AI router utilizes request-level configuration. Settings (keys, providers, model names) are read from cookies, ensuring zero database key persistence. PDF processing executes visual outlines via multimodal AI prompts by passing base64 documents inside a standard data-url. Fallback options generate static layouts if APIs fail.",
           size: 24,
         }),
       ],
     }),
-    new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "3.1 User & Documents relations\n", bold: true, size: 24 }),
-        new TextRun({ text: "Users upload documents. Each document records metadata (file size, page count, filename), along with parsed textual representations ('extractedText') and visual summaries ('visualOutline'). Deleting a user cascades and deletes all related documents.", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 150, left: 360 },
-      children: [
-        new TextRun({ text: "3.2 Quiz & Flashcard models\n", bold: true, size: 24 }),
-        new TextRun({ text: "Quiz sessions record options, correct answers, and grading thresholds. Flashcard decks map card terms and definitions generated via visual model extraction.", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 200, left: 360 },
-      children: [
-        new TextRun({ text: "3.3 Interactive Live Session tables\n", bold: true, size: 24 }),
-        new TextRun({ text: "Interactive Sessions ('interactive_sessions') map to a document. Slides ('session_slides') record index positions, type ('INFO', 'MULTIPLE_CHOICE', 'POLL', 'WORD_CLOUD', 'LEADERBOARD', 'Q_A'), and choices. Student participants register, submit slide responses, and post upvoteable Q&As.", size: 24 }),
-      ],
-    }),
 
-    // --- 5. CORE SERVICE LAYERS ---
+    // --- API DESIGN & SECURITY ---
     new Paragraph({
-      text: "4. Core Service Layers & AI Proxy",
+      text: "9. API Design & Security Configurations",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
       spacing: { after: 150, left: 360 },
       children: [
-        new TextRun({ text: "4.1 Dynamic Cookie-Driven AI Router\n", bold: true, size: 24 }),
-        new TextRun({ text: "The platform features a 'Bring Your Own Keys' (BYOK) paradigm. The global AI client in 'ai.service.ts' acts as an asynchronous proxy wrapper. It parses settings (API key, model choice, provider choice) dynamically from browser cookies at request time, routing completions to OpenAI, OpenRouter, Groq, or default system Gemini keys securely.", size: 24 }),
+        new TextRun({ text: "9.1 API Server Actions Interfaces\n", bold: true, size: 24 }),
+        new TextRun({ text: "• submitSlideResponseAction(slideId, value, participantUserId): Records poll selections or quiz grades.\n• updateSessionSlidesAction(sessionId, slides): Recreates slide array lists inside a transaction.\n", size: 24 }),
       ],
     }),
     new Paragraph({
       spacing: { after: 150, left: 360 },
       children: [
-        new TextRun({ text: "4.2 PDF OCR Engine\n", bold: true, size: 24 }),
-        new TextRun({ text: "Utilizes standardized OpenAI-compatible multimodal gateways to pass base64-encoded PDF visual payloads directly in a single data URL call structure: 'data:application/pdf;base64,...' to extract clean structures, outline layouts, and study definitions.", size: 24 }),
+        new TextRun({ text: "9.2 Error Handling & Resilience\n", bold: true, size: 24 }),
+        new TextRun({ text: "If an LLM OCR parser request times out, the backend defaults to standard dynamic text outlines automatically to protect user workflow continuity.", size: 24 }),
       ],
     }),
     new Paragraph({
       spacing: { after: 200, left: 360 },
       children: [
-        new TextRun({ text: "4.3 Live Slides Sync & Customizer\n", bold: true, size: 24 }),
-        new TextRun({ text: "During the LOBBY phase, hosts customize titles, bullet outlines, and poll choice selections. Saving deletes old slides and inserts the new list transactional array using nested relational mappings. Sync clients poll at 1.5s intervals to update views.", size: 24 }),
+        new TextRun({ text: "9.3 Security Specifications\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Auth.js validates credentials securely using encrypted cookies.\n• Host checking restricts local Ollama configurations only to 'localhost' connections, avoiding security exposures on public URLs.\n", size: 24 }),
+      ],
+    }),
+
+    // --- PERFORMANCE, SCALE & LOGGING ---
+    new Paragraph({
+      text: "10. Performance, Scale & Logging",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "10.1 Performance & Scalability\n", bold: true, size: 24 }),
+        new TextRun({ text: "To support large concurrent sessions, Prisma database connections are pooled, and static page caching is applied to dashboard and document outline screens. The 1.5s student sync poll queries a lightweight session state view, reducing write contention.", size: 24 }),
+      ],
+    }),
+    new Paragraph({
+      spacing: { after: 200, left: 360 },
+      children: [
+        new TextRun({ text: "10.2 Monitoring & Logging\n", bold: true, size: 24 }),
+        new TextRun({ text: "Backend service processes log structured JSON messages describing request targets, LLM latency metrics, and database transactional execution times for easy monitoring.", size: 24 }),
       ],
     }),
     // Embedded Live Session Sync Flow Diagram
@@ -230,40 +350,45 @@ function createTdd() {
       ],
     }),
 
-    // --- 6. DEPLOYMENT & DEVELOPMENT OPERATION ---
+    // --- TESTING & DESIGN DECISIONS ---
     new Paragraph({
-      text: "5. Operational Guide & Diagnostics",
+      text: "11. Testing Strategy & Design Decisions",
       heading: HeadingLevel.HEADING_1,
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 200 },
+      spacing: { after: 150, left: 360 },
       children: [
-        new TextRun({
-          text: "StudyTest AI target deployment is optimized for serverless hosting on Vercel. For local offline development and testing of local Ollama server models:",
-          size: 24,
-        }),
+        new TextRun({ text: "11.1 Testing Strategy\n", bold: true, size: 24 }),
+        new TextRun({ text: "The strategy combines unit tests for AI parsers, integration tests for server action database inserts, and local E2E simulation of student joining flows.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      spacing: { after: 200, left: 360 },
       children: [
-        new TextRun({ text: "1. Serve Ollama: ", bold: true, size: 24 }),
-        new TextRun({ text: "Run 'OLLAMA_HOST=0.0.0.0 ollama serve' locally to bind network interfaces.", size: 24 }),
+        new TextRun({ text: "11.2 Trade-offs & Design Decisions\n", bold: true, size: 24 }),
+        new TextRun({ text: "• Polling vs. WebSockets: Polling was selected over WebSockets to allow standard serverless action scales on Vercel without configuring separate sticky session servers.\n• Cookie Key Storage: Keeps keys local to browser, ensuring zero compliance overhead for backend database storage.\n", size: 24 }),
+      ],
+    }),
+
+    // --- FUTURE ENHANCEMENTS ---
+    new Paragraph({
+      text: "12. Future Enhancements & Appendix",
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 600, after: 200 },
+    }),
+    new Paragraph({
+      spacing: { after: 150, left: 360 },
+      children: [
+        new TextRun({ text: "12.1 Future Enhancements\n", bold: true, size: 24 }),
+        new TextRun({ text: "• WebRTC sync channels for instantaneous presentations updates.\n• Advanced AI document processing models with audio-out narration support.\n", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      spacing: { after: 200, left: 360 },
       children: [
-        new TextRun({ text: "2. Tunnels Routing: ", bold: true, size: 24 }),
-        new TextRun({ text: "Execute tunneling services (localtunnel or ngrok on port 11434) to expose endpoints to the Vercel cloud environment.", size: 24 }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 200, left: 720 },
-      children: [
-        new TextRun({ text: "3. Host Validation: ", bold: true, size: 24 }),
-        new TextRun({ text: "The settings panel dynamically checks 'window.location.hostname' to render the Local Ollama server choice only on 'localhost' and hide it in public cloud deployments.", size: 24 }),
+        new TextRun({ text: "12.2 Appendix\n", bold: true, size: 24 }),
+        new TextRun({ text: "Contains instructions for running local Ollama servers: bind network interfaces via 'OLLAMA_HOST=0.0.0.0 ollama serve' and expose it via localtunnel tunnels.", size: 24 }),
       ],
     }),
   ];
@@ -286,7 +411,7 @@ Packer.toBuffer(doc)
   .then((buffer) => {
     const filePath = path.join(process.cwd(), "Technical_Design_Document.docx");
     fs.writeFileSync(filePath, buffer);
-    console.log(`Successfully generated Technical Design Document with embedded design diagrams: ${filePath}`);
+    console.log(`Successfully generated Technical Design Document with all requested chapters: ${filePath}`);
   })
   .catch((err) => {
     console.error("Failed to generate DOCX document:", err);
