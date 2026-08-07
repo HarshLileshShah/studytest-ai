@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from "docx";
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, ImageRun } from "docx";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -112,6 +112,32 @@ function createTdd() {
         new TextRun({ text: "Prisma client connecting to a Neon PostgreSQL instance. Enables transactional queries, cascade deletions, and relational syncs.", size: 24 }),
       ],
     }),
+    // Embedded System Architecture Diagram
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 300, after: 300 },
+      children: [
+        new ImageRun({
+          data: fs.readFileSync(path.join(process.cwd(), "public/system_architecture.png")),
+          transformation: {
+            width: 450,
+            height: 450,
+          },
+        }),
+      ],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 300 },
+      children: [
+        new TextRun({
+          text: "Figure 1: StudyTest AI - Application Architecture Flow Diagram",
+          italics: true,
+          size: 18,
+          color: "6B7280",
+        }),
+      ],
+    }),
 
     // --- 4. DATABASE ARCHITECTURE ---
     new Paragraph({
@@ -177,6 +203,32 @@ function createTdd() {
         new TextRun({ text: "During the LOBBY phase, hosts customize titles, bullet outlines, and poll choice selections. Saving deletes old slides and inserts the new list transactional array using nested relational mappings. Sync clients poll at 1.5s intervals to update views.", size: 24 }),
       ],
     }),
+    // Embedded Live Session Sync Flow Diagram
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 300, after: 300 },
+      children: [
+        new ImageRun({
+          data: fs.readFileSync(path.join(process.cwd(), "public/live_session_flow.png")),
+          transformation: {
+            width: 450,
+            height: 450,
+          },
+        }),
+      ],
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 300 },
+      children: [
+        new TextRun({
+          text: "Figure 2: Interactive Live Session Real-time Synchronization Loop",
+          italics: true,
+          size: 18,
+          color: "6B7280",
+        }),
+      ],
+    }),
 
     // --- 6. DEPLOYMENT & DEVELOPMENT OPERATION ---
     new Paragraph({
@@ -234,7 +286,7 @@ Packer.toBuffer(doc)
   .then((buffer) => {
     const filePath = path.join(process.cwd(), "Technical_Design_Document.docx");
     fs.writeFileSync(filePath, buffer);
-    console.log(`Successfully generated Technical Design Document: ${filePath}`);
+    console.log(`Successfully generated Technical Design Document with embedded design diagrams: ${filePath}`);
   })
   .catch((err) => {
     console.error("Failed to generate DOCX document:", err);
