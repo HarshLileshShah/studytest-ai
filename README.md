@@ -1,45 +1,73 @@
 # 📚 StudyTest AI
 
-**StudyTest AI** is a premium, AI-powered learning workspace designed to help students master academic concepts. By uploading study documents (PDFs, lectures) or simply typing a topic name, students can let AI synthesize interactive roadmaps, personalized flashcard decks, diagnostic heatmaps, concept flowcharts, audio podcasts, and multi-player quiz sessions.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-studytest--ai--nu.vercel.app-0070f3?style=for-the-badge&logo=vercel)](https://studytest-ai-nu.vercel.app/dashboard)
+[![Next.js](https://img.shields.io/badge/Next.js%2016-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon.tech-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech/)
+[![Prisma](https://img.shields.io/badge/Prisma%20ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+
+> **Live Application**: [https://studytest-ai-nu.vercel.app](https://studytest-ai-nu.vercel.app)  
+> **Interactive Dashboard**: [https://studytest-ai-nu.vercel.app/dashboard](https://studytest-ai-nu.vercel.app/dashboard)  
+> **Technical Architecture & Trade-Offs**: [`decisions.md`](./decisions.md)  
+> **Technical Specification Document**: [`TECHSPEC.md`](./TECHSPEC.md)
 
 ---
 
-## ✨ Features
+## 🎯 Overview
+
+**StudyTest AI** is an intelligent learning operating system designed to eliminate passive learning. By uploading study documents (PDFs, lectures) or entering topic queries, students synthesize active learning pipelines:
+- **Diagnostic Knowledge Heatmaps** with one-click automated remediation
+- **SuperMemo-2 (SM-2)** Algorithmic Spaced Repetition Flashcards
+- **Multi-Speaker Audio Podcasts** (Alex & Taylor) using dynamic client-side voice synthesis
+- **Interactive Mermaid.js Concept Mind-Maps**
+- **Real-Time Multiplayer Quiz Battles & RPG Gamification**
+
+---
+
+## ✨ Core Features
 
 ### 1. 🎯 AI Weakness Diagnostic Cockpit
-* **Concept Heatmap**: Tracks your quiz attempt scores, aggregates errors by specific concepts, and highlights knowledge gaps (accuracy below 70%).
-* **Pagination & Detail Subpage**: The dashboard display is limited to the top 4 weakest concepts, with a dedicated `/dashboard/diagnostics` subpage rendering the complete set of knowledge analytics.
-* **🔥 Slay Weaknesses**: A single-click remediation tool that uses AI to compile a targeted remedial flashcard deck covering your weakest concepts.
+* **Concept Heatmap**: Aggregates question-level scores by conceptual topic tags to expose exact retention gaps ($<70\%$ accuracy threshold).
+* **🔥 Slay Weaknesses**: A single-click remediation workflow that triggers AI to synthesize targeted remedial SM-2 flashcard decks specifically for your weakest concepts.
+* **Granular Analytics**: Deep performance tracking with historical attempt trajectories and topic-by-topic breakdowns (`/dashboard/diagnostics`).
 
-### 2. 📁 AI Topic & Summary Document Creator
-* **Upload PDF**: Process local files to build custom study materials.
-* **✨ Study Topic**: Simply type the name of any topic (e.g. "Linear Algebra", "Mitochondria") to have the AI generate a high-quality study guide and bootstrap a virtual document.
+### 2. 🧠 Algorithmic Spaced Repetition (SuperMemo-2)
+* Built on the **SM-2 algorithm** with Ease Factor clamping ($\ge 1.3$) to prevent interval collapse.
+* Dynamically computes personalized review schedules based on student recall ratings (1–5 scale).
 
-### 3. 📝 Configurable Practice Quizzes
-* **Multiple Formats**: Practice with Multiple Choice Questions (MCQ), True/False statements, Short Answers, or Interactive Oral Exams.
-* **Blended MCQ**: The MCQ category automatically blends standard questions and multiple-choice fill-in-the-blank statements (`_______`).
-* **Cognitive Style Focus**: Choose between:
-  * 📚 **Theory**: Emphasizes concept definitions, academic rules, and facts.
-  * 🛠️ **Practical**: Scenario-based problem solving with concrete, real-world examples.
-  * 🔄 **Mixed**: A balanced blend of both.
-* **Academic Rigor & Tone**: Employs a formal, standardized testing tone with no conversational banter.
+### 3. 🎙️ AI Lecture Podcast (Alex & Taylor)
+* Formats uploaded materials into a dynamic co-host debate between two AI personas (`Alex` & `Taylor`).
+* Uses browser `SpeechSynthesis` API with custom pitch/gender queues and a synchronized bouncing frequency visualizer with zero streaming latency.
 
-### 4. 🕸️ Mermaid Concept Flowcharts
-* **Interactive Explorer**: Render dynamic Mermaid flowchart maps of academic concepts on-the-fly. Select concepts from a clickable side panel to trigger immediate chat explanations or quiz generation.
+### 4. 📝 Configurable Practice Quizzes
+* **Multiple Modes**: MCQ (with contextual fill-in-the-blank variants), True/False, and Short Answer with AI semantic grading.
+* **Cognitive Styles**: Focus on **Theory** (definitions & facts), **Practical** (scenario problem solving), or **Mixed**.
 
-### 5. ⚔️ Gamified RPG Questboard & Merchant Shop
-* **Quests**: Complete daily learning tasks to earn XP and Gold. Level up automatically.
-* **Merchant Shop**: Spend your study Gold to acquire custom scholastic Titles and unlock premium layout themes.
-* **Theme Selectors**: Unlock custom visual modes (e.g. Glassmorphism, Neon Cyberpunk, Lofi Cafe) that dynamically adapt to the application's light/dark mode triggers.
+### 5. 🕸️ Mermaid Concept Flowcharts & Mind-Maps
+* Generates interactive Mermaid diagram hierarchy graphs on-the-fly.
+* Clickable concept sidebar to instantly seed the AI tutor chat or generate instant drill quizzes.
+
+### 6. ⚔️ Gamified RPG Questboard & Merchant Shop
+* Daily study quests grant $+50\text{ XP}$ and $+10\text{ Gold}$.
+* In-app Merchant Shop allows students to unlock custom scholastic titles and adaptive themes (Neon Cyberpunk, Lofi Cafe, Glassmorphism).
 
 ---
 
-## 🏗️ Tech Stack
+## 🏗️ Tech Stack & Architecture
+
+```mermaid
+graph TD
+    User([Next.js 16 Client App]) <-->|Type-Safe Server Actions| SA[Server Actions RPC Layer]
+    SA <--> Services[Domain Business Services]
+    Services <-->|Prisma ORM v7| NeonDB[(Neon PostgreSQL Serverless)]
+    Services <-->|Structured JSON Chains| AI[Gemini API / Local Gemma]
+    User <-->|SpeechSynthesis Queue| Audio[Dual-Voice Podcast Player]
+```
 
 * **Frontend**: Next.js 16 (App Router, Turbopack), Tailwind CSS v4, Lucide React, Mermaid.js
-* **Backend**: Next.js Server Actions (`"use server"`), Prisma ORM Client v7, Neon PostgreSQL
-* **AI Engine**: Google Gemini API client
-* **Authentication**: Auth.js (NextAuth v5) supporting Google SSO and Dangerous Email Account Linking
+* **Backend**: Next.js Server Actions (`"use server"`), Prisma ORM v7, Neon PostgreSQL
+* **AI Engine**: Google Gemini API client with defensive JSON parsing & local Ollama fallback
+* **Authentication**: Auth.js (NextAuth v5) supporting Google SSO & Account Linking
 
 ---
 
@@ -54,7 +82,7 @@ AUTH_GOOGLE_ID="your_google_auth_id"
 AUTH_GOOGLE_SECRET="your_google_auth_secret"
 GEMINI_API_KEY="your_google_gemini_api_key"
 
-# Local Ollama AI settings
+# Local Ollama AI settings (optional fallback)
 USE_OLLAMA="false"
 OLLAMA_BASE_URL="http://localhost:11434/v1"
 OLLAMA_MODEL="gemma:2b"
@@ -66,7 +94,6 @@ npm install
 ```
 
 ### 3. Setup Database Schemas
-Sync the Prisma schema migrations directly to your database instance:
 ```bash
 npx prisma db push
 npx prisma generate
@@ -78,25 +105,17 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Running Locally with Google Gemma (Ollama)
-To run all AI features locally and for free without calling external cloud API endpoints, you can use Ollama:
-1. Download and install [Ollama](https://ollama.com) on your local machine.
-2. Download the Google Gemma model (we suggest the fast and lightweight `gemma:2b` or the full `gemma`):
-   ```bash
-   ollama run gemma:2b
-   ```
-3. Update your `.env.local` to enable local routing:
-   ```env
-   USE_OLLAMA="true"
-   OLLAMA_MODEL="gemma:2b" # must match the downloaded tag name
-   ```
+---
+
+## 🧪 Automated Testing
+Run the automated test suite covering SM-2 scheduling, quiz evaluation, and defensive AI response parsing:
+```bash
+npm test
+```
 
 ---
 
-## 🏆 Reusable UI Library
-The project features a custom design primitive layer located in `components/ui/` that unifies layouts and theme behaviors:
-* `Card`: Standardizes cards and glass container borders.
-* `Button`: Handles standard actions, variant colors, sizes, and spinner state indicators.
-* `Modal`: Handles portal-rendered overlays and backdrop dismiss events.
-* `Badge`: Visual status tags with semantic colors.
-* `ProgressBar`: Theme-adaptive progress indicator matching light/dark mode variables.
+## 📖 Key Documentation
+* [Architecture & Trade-Off Decisions (`decisions.md`)](./decisions.md)
+* [Full Technical Specification (`TECHSPEC.md`)](./TECHSPEC.md)
+* [Deployment Guide (`DEPLOYMENT.md`)](./DEPLOYMENT.md)

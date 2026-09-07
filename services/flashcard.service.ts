@@ -209,22 +209,20 @@ export async function getDeck(deckId: string, userId: string) {
 }
 
 /**
- * Review a flashcard and update its spaced repetition intervals using SuperMemo-2 (SM-2).
+ * Pure SuperMemo-2 (SM-2) spaced repetition interval and ease factor calculation.
  */
-export async function reviewCard(cardId: string, userId: string, quality: number) {
+export function calculateSM2(
+  quality: number,
+  currentRepetitions: number = 0,
+  currentInterval: number = 0,
+  currentEaseFactor: number = 2.5
+) {
   // Validate quality bounds (0 to 5)
   const q = Math.max(0, Math.min(5, quality));
 
-  // Find current review progress
-  const progress = await prisma.flashcardProgress.findUnique({
-    where: {
-      userId_cardId: { userId, cardId },
-    },
-  });
-
-  let interval = progress?.interval ?? 0;
-  let repetitions = progress?.repetitions ?? 0;
-  let easeFactor = progress?.easeFactor ?? 2.5;
+  let interval = currentInterval;
+  let repetitions = currentRepetitions;
+  let easeFactor = currentEaseFactor;
 
   // Spaced repetition scheduler logic
   if (q >= 3) {
@@ -246,6 +244,27 @@ export async function reviewCard(cardId: string, userId: string, quality: number
   if (easeFactor < 1.3) {
     easeFactor = 1.3; // Bounds restriction
   }
+
+  return { interval, repetitions, easeFactor };
+}
+
+/**
+ * Review a flashcard and update its spaced repetition intervals using SuperMemo-2 (SM-2).
+ */
+export async function reviewCard(cardId: string, userId: string, quality: number) {
+  // Find current review progress
+  const progress = await prisma.flashcardProgress.findUnique({
+    where: {
+      userId_cardId: { userId, cardId },
+    },
+  });
+
+  const { interval, repetitions, easeFactor } = calculateSM2(
+    quality,
+    progress?.repetitions ?? 0,
+    progress?.interval ?? 0,
+    progress?.easeFactor ?? 2.5
+  );
 
   const nextReview = new Date();
   nextReview.setDate(nextReview.getDate() + interval);
