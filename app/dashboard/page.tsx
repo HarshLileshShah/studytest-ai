@@ -31,6 +31,7 @@ import { prisma } from "@/lib/prisma";
 import { AVAILABLE_BADGES } from "@/services/gamification.service";
 import { getWeaknessDiagnosticAction } from "@/app/actions/remedial.actions";
 import { RemediationCockpit } from "@/components/dashboard/remediation-cockpit";
+import { LoadDemoButton } from "@/components/dashboard/load-demo-button";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -262,22 +263,24 @@ export default async function DashboardPage() {
 
       {!hasData ? (
         /* Empty State */
-        <div className="glass-card p-12 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+        <div className="glass-card p-12 text-center max-w-2xl mx-auto border border-primary/20 shadow-xl">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 shadow-inner">
             <Sparkles className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-xl font-semibold mb-2">No data yet</h2>
-          <p className="text-muted-foreground max-w-md mx-auto mb-6">
-            Upload your first PDF document and take a quiz to see your
-            performance analytics here.
+          <h2 className="text-2xl font-bold mb-2">Welcome to StudyTest AI</h2>
+          <p className="text-muted-foreground max-w-md mx-auto mb-8 text-sm leading-relaxed">
+            Upload your own PDF study documents, or click below to instantly populate a pre-configured sample course with diagnostic quizzes and SM-2 flashcards.
           </p>
-          <Link
-            href="/documents/upload"
-            className="btn-primary inline-flex items-center gap-2"
-          >
-            <Sparkles className="w-4 h-4" />
-            Get Started
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <LoadDemoButton />
+            <Link
+              href="/documents/upload"
+              className="btn-secondary inline-flex items-center gap-2 py-2.5 px-5 text-sm"
+            >
+              <BookOpen className="w-4 h-4" />
+              Upload PDF
+            </Link>
+          </div>
         </div>
       ) : (
         <>
