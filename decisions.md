@@ -5,14 +5,61 @@
 
 ---
 
-## 1. Executive Summary & Problem Framing
+## 1. Project Framing & Core Problem Formulation
 
-Digital learning suffers from the **"Passive Consumption Trap"**. Students aggregate massive amounts of PDFs, lecture slides, and notes, yet conventional digital tools treat these documents as static reading material. Decades of cognitive science research demonstrate that passive rereading yields poor retention compared to **active recall, diagnostic feedback loops, and algorithmic spaced repetition**.
+### 1.1 What is the Problem and Who is it For?
+* **Target Audience**: University students, self-taught engineers, and professionals studying dense, technical domains (e.g., computer science, biology, finance, law) who must assimilate large volumes of unstructured materials (PDF textbooks, lecture slide decks, and syllabus notes).
+* **The Core Problem**: Digital study tools suffer from the **"Passive Consumption Trap"**. Students spend dozens of hours highlighting and passively rereading notes, generating a psychological *illusion of competence*. Decades of cognitive psychology (e.g., Roediger & Karpicke) prove that passive rereading yields poor long-term retention compared to **active recall testing, diagnostic feedback loops, and spaced repetition**. Traditional tools either act as passive document viewers or standalone flashcard apps with no connection to the source material.
 
-### Core Product Hypothesis
-> *If we can automatically transform unstructured academic materials into interactive, diagnostic study workflows (adaptive quizzes, SM-2 flashcard decks, concept mind-maps, and multi-speaker audio lectures), students will retain significantly more knowledge with less cognitive fatigue.*
+---
 
-Rather than building a thin wrapper over an LLM chat endpoint, **StudyTest AI** is an end-to-end learning operating system that parses, structures, tests, and diagnoses student mastery across their academic materials.
+### 1.2 The Hard Part — The Specific Sub-Problem That Makes This Non-Trivial
+Generating a generic quiz from text is easy. Building a **reliable, closed-loop diagnostic learning system from arbitrary unstructured documents** is hard because:
+1. **Schema Non-Determinism & Hallucinations**: Raw LLMs frequently generate malformed JSON, produce option lists that omit the correct answer, hallucinate answers outside the document's scope, or fail on edge cases (e.g., LaTeX formulas, code snippets).
+2. **Semantic Free-Text Evaluation**: Objective grading of open-ended student answers requires distinguishing between superficial keyword absence and true conceptual understanding.
+3. **Concept Extraction & Error Attribution**: Mapping question-level mistakes to a structured taxonomy of topics, computing mastery decay over time, and generating targeted remediation without drowning the student in redundant cards.
+4. **Algorithmic State Scheduling vs. Static LLM Text**: Spaced repetition cannot be handled by an LLM prompt; it requires mathematical state machines (SuperMemo-2) calculating dynamic intervals, tracking user-specific Ease Factors ($\text{EF}$), and clamping bounds ($\text{EF} \ge 1.3$) to avoid the "interval collapse trap" across 30–90 day retention cycles.
+
+---
+
+### 1.3 The Slice — The One End-to-End Path Actually Shipped
+The complete, end-to-end path shipped in StudyTest AI is the **"Document-to-Remediation Diagnostic Loop"**:
+```
+Unstructured PDF / Topic Query
+    │
+    ▼
+1. Ingestion & Visual Concept Outline Extraction
+    │
+    ▼
+2. Calibrated Quiz Generation (Theory, Practical, Mixed) with Defensive JSON Validation
+    │
+    ▼
+3. Interactive Quiz Attempt & Semantic Evaluation (MCQ + Short Answer)
+    │
+    ▼
+4. Diagnostic Heatmap Engine (Flags Weak Topics with Accuracy < 70%)
+    │
+    ▼
+5. "🔥 Slay Weaknesses" 1-Click Remediation Action
+    │
+    ▼
+6. SuperMemo-2 (SM-2) Algorithmic Spaced Repetition Scheduling & Long-Term Mastery
+```
+
+Every stage of this path is live and fully interactive on the deployed application.
+
+---
+
+### 1.4 Why This Instead of a Fixed Prompt?
+A common question for LLM-powered applications is: *"Why not just use a well-crafted prompt in ChatGPT or Claude?"*
+
+| Dimension | Fixed LLM Prompt (ChatGPT / Claude) | StudyTest AI Architecture |
+| :--- | :--- | :--- |
+| **State & Memory** | Zero persistent memory across sessions. Forgets past attempt errors, weak topics, and study cadence. | Relational PostgreSQL state tracking every attempt, question, and topic accuracy score over time. |
+| **Spaced Repetition** | LLMs cannot compute mathematical time-series intervals or schedule reviews according to forgetting curves. | Algorithmic **SuperMemo-2 (SM-2)** scheduler managing personalized interval decay and next-review timestamps. |
+| **Diagnostic Loop** | Generates text answers, but cannot aggregate error rates across 10 quizzes to identify that your *Mitochondrial Electron Transport* is at 40% accuracy. | Real-time **Diagnostic Cockpit** clustering mistakes into topic heatmaps with 1-click targeted remediation. |
+| **Schema Guarantees** | Output frequently breaks format, markdown fences, or key schemas when prompt complexity grows. | Multi-pass defensive parser with regex strippers, auto-repair, and strict **Zod runtime schema enforcement**. |
+| **UX & Modalities** | Pure text wall. | Multi-speaker **browser-native audio debate podcast (Alex & Taylor)**, interactive **Mermaid.js mind-maps**, and real-time multiplayer presentation sessions. |
 
 ---
 
