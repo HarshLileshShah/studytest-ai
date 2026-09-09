@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 
 export const authConfig = {
   providers: [
@@ -13,6 +14,19 @@ export const authConfig = {
           access_type: "offline",
           prompt: "consent",
         },
+      },
+    }),
+    Credentials({
+      id: "demo",
+      name: "Demo Account",
+      credentials: {},
+      async authorize() {
+        return {
+          id: "demo-user-001",
+          name: "Demo Student",
+          email: "demo@studytest.ai",
+          image: "https://api.dicebear.com/7.x/bottts/svg?seed=studytest",
+        };
       },
     }),
   ],

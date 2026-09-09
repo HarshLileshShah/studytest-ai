@@ -30,38 +30,61 @@ export default async function LoginPage() {
           </p>
 
           {/* OAuth Form */}
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: "/dashboard" });
-            }}
-          >
-            <button
-              type="submit"
-              className="w-full flex items-center justify-center gap-3.5 bg-white text-zinc-950 font-semibold py-4 px-6 rounded-xl hover:bg-zinc-100 transition-all duration-300 shadow-xl active:scale-[0.98] group cursor-pointer"
+          <div className="space-y-3">
+            <form
+              action={async () => {
+                "use server";
+                await signIn("google", { redirectTo: "/dashboard" });
+              }}
             >
-              {/* Custom SVG Google Icon */}
-              <svg
-                className="w-5 h-5 flex-shrink-0"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                xmlns="http://www.w3.org/2000/svg"
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-3.5 bg-white text-zinc-950 font-semibold py-3.5 px-6 rounded-xl hover:bg-zinc-100 transition-all duration-300 shadow-xl active:scale-[0.98] group cursor-pointer"
               >
-                <g transform="matrix(1, 0, 0, 1, 0, 0)">
-                  <path
-                    d="M21.35,11.1H12v2.7h5.38C16.88,16.5,14.77,18,12,18A6,6,0,1,1,12,6c1.6,0,3,.62,4.1,1.63L18.2,5.53A8.88,8.88,0,0,0,12,3.3a8.7,8.7,0,1,0,8.7,8.7C20.7,11.75,21.35,11.1,21.35,11.1Z"
-                    fill="#09090b"
-                  />
-                </g>
-              </svg>
-              <span>Continue with Google</span>
-            </button>
-          </form>
+                {/* Custom SVG Google Icon */}
+                <svg
+                  className="w-5 h-5 flex-shrink-0"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g transform="matrix(1, 0, 0, 1, 0, 0)">
+                    <path
+                      d="M21.35,11.1H12v2.7h5.38C16.88,16.5,14.77,18,12,18A6,6,0,1,1,12,6c1.6,0,3,.62,4.1,1.63L18.2,5.53A8.88,8.88,0,0,0,12,3.3a8.7,8.7,0,1,0,8.7,8.7C20.7,11.75,21.35,11.1,21.35,11.1Z"
+                      fill="#09090b"
+                    />
+                  </g>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+            </form>
+
+            <div className="relative flex items-center justify-center my-4">
+              <div className="border-t border-white/10 w-full" />
+              <span className="bg-[#0e0e12] px-3 text-xs text-muted-foreground uppercase tracking-wider">or</span>
+              <div className="border-t border-white/10 w-full" />
+            </div>
+
+            {/* Instant Demo Account Sign-in */}
+            <form
+              action={async () => {
+                "use server";
+                await signIn("demo", { redirectTo: "/dashboard" });
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-2.5 bg-primary/15 hover:bg-primary/25 text-primary border border-primary/30 font-semibold py-3.5 px-6 rounded-xl transition-all duration-300 shadow-lg active:scale-[0.98] cursor-pointer"
+              >
+                <span>⚡ Instant Demo Sign-In (Zero Setup)</span>
+              </button>
+            </form>
+          </div>
 
           {/* Card Footer */}
-          <p className="text-xs text-muted-foreground mt-8">
-            Access to generated quizzes and analytics is secured and private.
+          <p className="text-xs text-muted-foreground mt-6">
+            Evaluators & guests can use the Demo Sign-In to test all features instantly.
           </p>
         </div>
       </div>
