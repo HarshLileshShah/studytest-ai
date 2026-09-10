@@ -6,7 +6,9 @@ import { generateFlashcards, generateSingleFlashcardFromText } from "./ai.servic
  */
 async function getUniqueShareCode(): Promise<string> {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  while (true) {
+  const MAX_ATTEMPTS = 10;
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     let code = "FD-";
     for (let i = 0; i < 6; i++) {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -18,6 +20,10 @@ async function getUniqueShareCode(): Promise<string> {
       return code;
     }
   }
+
+  throw new Error(
+    "Could not generate a unique share code after 10 attempts. Please try again."
+  );
 }
 
 /**
@@ -83,7 +89,7 @@ export async function createSingleFlashcardFromHighlight(
     throw new Error("Document not found or access denied.");
   }
 
-  // 2. Generate flashcard term/def via Groq AI
+  // 2. Generate flashcard front/back pair via Gemini AI
   const cardData = await generateSingleFlashcardFromText(highlightedText);
 
   // 3. Find or create the flashcard deck for this document

@@ -8,64 +8,12 @@
 
 > **Live Application**: [https://studytest-ai-nu.vercel.app](https://studytest-ai-nu.vercel.app)  
 > **Interactive Dashboard**: [https://studytest-ai-nu.vercel.app/dashboard](https://studytest-ai-nu.vercel.app/dashboard)  
-> **Engineering Decisions & Trade-Offs**: [`decisions.md`](./decisions.md)  
+> **Option 4 Architectural Brief & Decisions**: [`decisions.md`](./decisions.md)  
 > **Technical Specification Document**: [`TECHSPEC.md`](./TECHSPEC.md)
 
 ---
 
-## ⚡ Quick Demo & Evaluation Setup (Zero Friction)
-
-For evaluating this project, you have two instant options:
-
-### Option A: Test the Live Deployed App (0 Setup)
-Open [https://studytest-ai-nu.vercel.app](https://studytest-ai-nu.vercel.app) and click **"Continue with Google"** or **"⚡ Instant Demo Sign-In"** to access the live dashboard with pre-configured data.
-
----
-
-### Option B: Run Locally in 60 Seconds (No Google OAuth Needed)
-
-You do **not** need to configure Google Cloud OAuth or API credentials to test the platform locally. A built-in demo provider and rich seed script are included.
-
-1. **Clone & Setup Environment**:
-   ```bash
-   cp .env.example .env.local
-   npm install
-   ```
-
-2. **Push Schema & Seed Demo Data**:
-   ```bash
-   npx prisma db push
-   npm run db:seed
-   ```
-   > *The seed script populates a realistic Operating Systems study course with pre-generated quizzes, historical attempt logs with topic error rates (so the Diagnostic Cockpit displays weak spots immediately), and active SuperMemo-2 flashcards.*
-
-3. **Start the App**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000/login](http://localhost:3000/login) and click **"⚡ Instant Demo Sign-In (Zero Setup)"**.
-
----
-
-## 🧪 Automated Testing
-
-Run the automated test suite (21 tests in ~1.1s) covering SM-2 interval calculations, defensive JSON repair, schema enforcement, and quiz grading:
-```bash
-npm test
-```
-
-```
-✔ Defensive JSON Parser & Schema Validation Engine (7 tests)
-✔ Quiz Evaluation Engine (4 tests)
-✔ SuperMemo-2 (SM-2) Spaced Repetition Algorithm (6 tests)
-✔ Utility Functions (4 tests)
-
-ℹ tests 21 | suites 8 | pass 21 | fail 0
-```
-
----
-
-## 🎯 What is StudyTest AI?
+## 🎯 Overview
 
 **StudyTest AI** turns unstructured study documents (PDFs, lectures, syllabi) into active recall and diagnostic learning loops:
 - **🎯 AI Weakness Diagnostic Cockpit**: Clusters quiz mistakes by concept tags and triggers **"🔥 Slay Weaknesses"** 1-click remedial flashcards.
@@ -90,25 +38,81 @@ graph TD
 
 * **Frontend**: Next.js 16 (App Router, Turbopack), Tailwind CSS v4, Lucide React, Mermaid.js
 * **Backend**: Next.js Server Actions (`"use server"`), Prisma ORM v7, Neon PostgreSQL
-* **AI Engine**: Google Gemini API / Groq client with defensive regex parsing & local Ollama fallback
+* **AI Engine**: Google Gemini API client with defensive regex parsing & local Ollama fallback
 * **Authentication**: Auth.js (NextAuth v5) supporting Google SSO & Instant Demo Login
 
 ---
 
-## ⚙️ Full Production Environment Setup (Optional)
+## 🚀 Getting Started
 
-If you want to configure your own custom OAuth and AI API keys in `.env.local`:
-```env
+### 🚀 Quick Demo (No Setup Required)
+
+The app is live and ready to test:
+
+**Live URL**: https://studytest-ai-nu.vercel.app
+
+**Demo account** (pre-loaded with sample documents and quiz data):
+- Email: demo@studytest.ai
+- Sign in via Google using this account
+
+Or sign in with your own Google account — a fresh workspace will be created automatically.
+
+**What to try first:**
+1. Go to Dashboard → upload any PDF (lecture notes, textbook chapter, article)
+2. Click "Generate Quiz" — Gemini will produce a quiz in ~10 seconds
+3. Take the quiz → check the Diagnostics tab to see your weak topics
+4. Generate Flashcards → review them with the SM-2 spaced repetition scheduler
+
+---
+
+### 1. Environment Configuration
+Create a `.env.local` file in the root directory:
+```bash
 DATABASE_URL="postgresql://user:password@host/dbname?sslmode=verify-full&connect_timeout=30"
-AUTH_SECRET="your_32byte_random_secret"
-AUTH_GOOGLE_ID="your_google_oauth_client_id"
-AUTH_GOOGLE_SECRET="your_google_oauth_client_secret"
-GROQ_API_KEY="gsk_your_groq_api_key"
+NEXTAUTH_SECRET="your_nextauth_secret_here"
+AUTH_GOOGLE_ID="your_google_auth_id"
+AUTH_GOOGLE_SECRET="your_google_auth_secret"
+GEMINI_API_KEY="your_google_gemini_api_key"
 
-# Local Ollama AI settings (optional offline mode)
+# Local Ollama AI settings (optional fallback)
 USE_OLLAMA="false"
 OLLAMA_BASE_URL="http://localhost:11434/v1"
 OLLAMA_MODEL="gemma:2b"
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Setup Database Schemas & Seed Data
+```bash
+npx prisma db push
+npx prisma db:seed
+```
+
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🧪 Automated Testing
+
+Run the automated test suite (covering SM-2 interval calculations, defensive JSON repair, schema enforcement, and quiz grading):
+```bash
+npm test
+```
+
+```
+✔ Defensive JSON Parser & Schema Validation Engine
+✔ Quiz Evaluation Engine
+✔ SuperMemo-2 (SM-2) Spaced Repetition Algorithm
+✔ Utility Functions
+
+ℹ tests passing without failures
 ```
 
 ---

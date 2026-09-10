@@ -6,6 +6,18 @@
 
 ---
 
+## Why I'm Submitting StudyTest AI (Option 4 Brief)
+
+**The problem:** Students drown in passive content — PDFs, slides, lecture notes — with no active recall mechanism. StudyTest AI transforms uploaded documents into interactive learning workflows: adaptive quizzes, SM-2 spaced repetition flashcards, concept maps, and AI podcast summaries.
+
+**The hard part:** Getting reliable structured output from an LLM at inference time. A naive implementation breaks the moment Gemini adds a conversational preamble, wraps JSON in markdown fences, or hallucinates a correctAnswer that isn't in the options array. The defensive parser (extractAndParseJSON + validateAndFilterQuestions in tests/ai-parser.test.ts) was the genuinely non-trivial sub-problem — it handles fence stripping, preamble extraction, Zod schema validation, and filters hallucinated MCQ answers before they reach the student.
+
+**The slice:** Upload PDF → extract text → Gemini generates structured quiz questions → defensive parser validates and filters output → student takes quiz → SM-2 algorithm schedules flashcard reviews based on recall quality. This full path works end to end on the live app at https://studytest-ai-nu.vercel.app.
+
+**Why this instead of a fixed prompt:** This project demonstrates range that a scoped prompt wouldn't — LLM reliability engineering, SM-2 algorithm implementation with EF clamping, multiplayer quiz battle state sync, and real product decisions like the Diagnostic Cockpit aggregating topic-level error rates. The hard parts are real and the tests prove they work.
+
+---
+
 ## The Problem — What you built and who it's for
 
 **Who it's for**: Students, self-taught engineers, and professionals studying dense technical material — 40-page PDF textbooks, lecture slides, or certification syllabi.
@@ -91,6 +103,7 @@ If you paste a PDF into ChatGPT and say "quiz me":
   - LLMs often wrap JSON in ```json ... ``` code blocks or add conversational preambles ("Sure, here are your questions:").
   - We run a regex sanitizer to extract the raw JSON object, repair missing closing brackets if truncated, and pass the result through **Zod schemas**.
   - We explicitly validate that for every MCQ question, `question.options.includes(question.correctAnswer)` is `true`. If the model hallucinates an answer that isn't in the options list, the question is rejected and regenerated.
+* **Note on Dependencies**: The `openai` npm package is used as the HTTP client for the local Ollama fallback, since Ollama exposes an OpenAI-compatible REST API. It is not used to call OpenAI's services.
 
 ### 6. Real-Time Presentation Sync: 1.5s Polling (Instead of WebSockets)
 * **Decision**: Used a 1.5-second polling interval on the database for live slide presenter sessions.
