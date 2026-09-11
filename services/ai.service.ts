@@ -5,7 +5,7 @@ import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
 function getCloudFallbackClient() {
   if (process.env.GEMINI_API_KEY) {
-    const geminiModel = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    const geminiModel = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     console.log(`🤖 [AI Engine] Using Google Gemini Cloud (${geminiModel})`);
     return {
       client: new OpenAI({
@@ -15,13 +15,14 @@ function getCloudFallbackClient() {
       model: geminiModel,
     };
   }
-  console.log("🤖 [AI Engine] Using Groq Cloud (llama-3.3-70b-versatile)");
+  const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+  console.log(`🤖 [AI Engine] Using Groq Cloud (${groqModel})`);
   return {
     client: new OpenAI({
       apiKey: process.env.GROQ_API_KEY || "",
       baseURL: "https://api.groq.com/openai/v1",
     }),
-    model: "llama-3.3-70b-versatile",
+    model: groqModel,
   };
 }
 
@@ -32,7 +33,7 @@ function getSecondaryCloudClient() {
         apiKey: process.env.GROQ_API_KEY,
         baseURL: "https://api.groq.com/openai/v1",
       }),
-      model: "llama-3.3-70b-versatile",
+      model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
     };
   }
   return null;
@@ -60,9 +61,9 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   }
 
   if (provider === "groq" && settings?.apiKey) {
-    const groqModel = settings?.model && (settings.model.includes("llama") || settings.model.includes("mixtral") || settings.model.includes("gemma"))
+    const groqModel = settings?.model && (settings.model.includes("gpt-oss") || settings.model.includes("qwen") || settings.model.includes("llama") || settings.model.includes("mixtral") || settings.model.includes("gemma"))
       ? settings.model
-      : "llama-3.3-70b-versatile";
+      : (process.env.GROQ_MODEL || "openai/gpt-oss-120b");
     console.log(`🤖 [AI Engine] Using custom user Groq key (${groqModel})`);
     return {
       client: new OpenAI({
@@ -76,7 +77,7 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   if (provider === "gemini" && settings?.apiKey) {
     const geminiModel = settings?.model && settings.model.toLowerCase().includes("gemini")
       ? settings.model
-      : (process.env.GEMINI_MODEL || "gemini-1.5-flash");
+      : (process.env.GEMINI_MODEL || "gemini-2.5-flash");
     console.log(`🤖 [AI Engine] Using custom user Gemini key (${geminiModel})`);
     return {
       client: new OpenAI({
@@ -171,7 +172,7 @@ const client = {
   }
 } as unknown as OpenAI;
 
-const AI_MODEL = "llama-3.3-70b-versatile";
+const AI_MODEL = "openai/gpt-oss-120b";
 
 const questionSchema = z.object({
   question: z.string(),

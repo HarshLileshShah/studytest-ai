@@ -54,9 +54,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       let savedModel = getCookie("custom_model") || "";
 
       if (savedProvider === "gemini" && (!savedModel || !savedModel.toLowerCase().includes("gemini"))) {
-        savedModel = "gemini-1.5-flash";
-      } else if (savedProvider === "groq" && (!savedModel || !savedModel.includes("llama"))) {
-        savedModel = "llama-3.3-70b-versatile";
+        savedModel = "gemini-2.5-flash";
+      } else if (savedProvider === "groq" && (!savedModel || !savedModel.includes("gpt-oss") && !savedModel.includes("qwen"))) {
+        savedModel = "openai/gpt-oss-120b";
       } else if (savedProvider === "openai" && (!savedModel || !savedModel.includes("gpt"))) {
         savedModel = "gpt-4o-mini";
       }
@@ -128,9 +128,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 setApiKey("");
                 setModelName("");
               } else if (val === "gemini") {
-                setModelName("gemini-1.5-flash");
+                setModelName("gemini-2.5-flash");
               } else if (val === "groq") {
-                setModelName("llama-3.3-70b-versatile");
+                setModelName("openai/gpt-oss-120b");
               } else if (val === "ollama") {
                 setModelName("gemma:2b");
               } else if (val === "openai") {
