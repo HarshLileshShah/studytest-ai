@@ -5,6 +5,7 @@ import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
 function getCloudFallbackClient() {
   if (process.env.GEMINI_API_KEY) {
+    console.log("🤖 [AI Engine] Using Google Gemini Cloud (gemini-1.5-flash)");
     return {
       client: new OpenAI({
         apiKey: process.env.GEMINI_API_KEY,
@@ -13,6 +14,7 @@ function getCloudFallbackClient() {
       model: "gemini-1.5-flash",
     };
   }
+  console.log("🤖 [AI Engine] Using Groq Cloud (llama-3.3-70b-versatile)");
   return {
     client: new OpenAI({
       apiKey: process.env.GROQ_API_KEY || "",
@@ -29,7 +31,10 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   const settings = await getAISettingsFromCookies();
   const provider = settings?.provider || "default";
 
-  if (provider === "ollama") {
+  // In production serverless (Vercel), local Ollama daemon cannot run unless user configured a custom remote baseURL
+  const isVercel = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
+  if (provider === "ollama" && !isVercel) {
     return {
       client: new OpenAI({
         apiKey: "ollama",
@@ -41,6 +46,7 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   }
 
   if (provider === "groq" && settings?.apiKey) {
+    console.log("🤖 [AI Engine] Using custom user Groq key");
     return {
       client: new OpenAI({
         apiKey: settings.apiKey,
@@ -51,6 +57,7 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   }
 
   if (provider === "gemini" && settings?.apiKey) {
+    console.log("🤖 [AI Engine] Using custom user Gemini key");
     return {
       client: new OpenAI({
         apiKey: settings.apiKey,
@@ -79,9 +86,10 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
     };
   }
 
-  // Fallback to local .env configs
-  const isOllamaLocal = process.env.USE_OLLAMA === "true";
+  // Fallback to local .env configs (only if not on serverless Vercel)
+  const isOllamaLocal = process.env.USE_OLLAMA === "true" && !isVercel;
   if (isOllamaLocal) {
+    console.log("🤖 [AI Engine] Using local Ollama (gemma:2b)");
     return {
       client: new OpenAI({
         apiKey: "ollama",
