@@ -5,13 +5,14 @@ import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
 function getCloudFallbackClient() {
   if (process.env.GEMINI_API_KEY) {
-    console.log("🤖 [AI Engine] Using Google Gemini Cloud (gemini-1.5-flash)");
+    const geminiModel = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+    console.log(`🤖 [AI Engine] Using Google Gemini Cloud (${geminiModel})`);
     return {
       client: new OpenAI({
         apiKey: process.env.GEMINI_API_KEY,
         baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
       }),
-      model: "gemini-1.5-flash",
+      model: geminiModel,
     };
   }
   console.log("🤖 [AI Engine] Using Groq Cloud (llama-3.3-70b-versatile)");
@@ -22,6 +23,19 @@ function getCloudFallbackClient() {
     }),
     model: "llama-3.3-70b-versatile",
   };
+}
+
+function getSecondaryCloudClient() {
+  if (process.env.GEMINI_API_KEY && process.env.GROQ_API_KEY) {
+    return {
+      client: new OpenAI({
+        apiKey: process.env.GROQ_API_KEY,
+        baseURL: "https://api.groq.com/openai/v1",
+      }),
+      model: "llama-3.3-70b-versatile",
+    };
+  }
+  return null;
 }
 
 /**
@@ -119,14 +133,26 @@ const client = {
                 err?.code === "ECONNREFUSED" ||
                 err?.message?.includes("ECONNREFUSED") ||
                 err?.message?.includes("fetch failed") ||
-                err?.message?.includes("Connection error");
+                err?.message?.includes("Connection error") ||
+                err?.status === 404 ||
+                err?.status === 429;
 
+              // 1. If local Ollama failed, fallback to primary cloud
               if (isLocalFallback && isConnectionError && (process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY)) {
-                console.warn("⚠️ Local Ollama unreachable at port 11434. Gracefully falling back to cloud AI provider...");
+                console.warn("⚠️ Local Ollama unreachable. Gracefully falling back to cloud AI provider...");
                 const cloudClient = getCloudFallbackClient();
                 params.model = cloudClient.model;
                 return await cloudClient.client.chat.completions.create(params, options);
               }
+
+              // 2. If primary cloud failed, fallback to secondary cloud (e.g. Gemini -> Groq)
+              const secondary = getSecondaryCloudClient();
+              if (secondary && secondary.model !== model && isConnectionError) {
+                console.warn(`⚠️ Primary cloud provider (${model}) failed with ${err?.message || err?.status}. Failing over to secondary cloud provider (${secondary.model})...`);
+                params.model = secondary.model;
+                return await secondary.client.chat.completions.create(params, options);
+              }
+
               throw err;
             }
           }
