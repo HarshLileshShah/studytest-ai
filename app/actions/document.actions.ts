@@ -6,6 +6,7 @@ import { join } from "path";
 import { tmpdir } from "os";
 import { createDocument, getDocument, updateDocumentStatus, deleteDocument as deleteDoc } from "@/services/document.service";
 import { extractTextFromPDF } from "@/services/pdf.service";
+import { getAIClient } from "@/services/ai.service";
 import { auth } from "@/auth";
 
 const UPLOAD_DIR = process.env.NODE_ENV === "production"
@@ -315,10 +316,7 @@ export async function searchKnowledgeBaseAction(query: string) {
       }
     }
 
-    const client = new OpenAI({
-      apiKey: process.env.GROQ_API_KEY,
-      baseURL: "https://api.groq.com/openai/v1",
-    });
+    const { client, model } = await getAIClient();
 
     const prompt = `You are a helpful study tutor. A student is asking a question across their PDF documents library.
 Analyze the following source text snippets extracted from the student's documents.
@@ -335,7 +333,7 @@ ${snippets.map((s) => `[Document: "${s.title}"]\n${s.text}`).join("\n\n")}
 ---`;
 
     const chatCompletion = await client.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model,
       messages: [
         { role: "system", content: "You are a supportive, high-fidelity AI study assistant." },
         { role: "user", content: prompt },

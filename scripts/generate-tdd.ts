@@ -144,14 +144,16 @@ function createTdd() {
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "1. The Passive Rereading Trap: ", bold: true, size: 24 }),
         new TextRun({ text: "Students spend hours rereading highlighted text, which creates an illusion of competence while yielding near-zero long-term retention compared to active recall testing.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "2. Disconnected Classroom Tooling: ", bold: true, size: 24 }),
         new TextRun({ text: "Classroom presentation and polling tools (e.g., Mentimeter, Kahoot) operate in complete isolation from students' individual study outlines, requiring teachers to manually duplicate questions and preventing students from continuing post-lecture review on their weak topics.", size: 24 }),
@@ -176,35 +178,40 @@ function createTdd() {
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Automated Synthesis: ", bold: true, size: 24 }),
         new TextRun({ text: "Convert any PDF or topic query into structured quiz banks, flashcard decks, and Mermaid mind-maps in under 10 seconds.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Diagnostic Precision: ", bold: true, size: 24 }),
         new TextRun({ text: "Map every student mistake to specific topic taxonomies, displaying conceptual heatmaps and offering 1-click remedial flashcard generation.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Spaced Repetition Rigor: ", bold: true, size: 24 }),
         new TextRun({ text: "Implement standard SM-2 mathematical intervals with lower bound clamping (EF >= 1.3) to prevent interval collapse.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Zero-Cost Audio Synthesis: ", bold: true, size: 24 }),
         new TextRun({ text: "Synthesize multi-speaker podcast debates entirely on the client device using Web Speech APIs, eliminating cloud TTS per-character API costs.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 200, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 200 },
       children: [
         new TextRun({ text: "• Serverless Multiplayer: ", bold: true, size: 24 }),
         new TextRun({ text: "Provide low-latency live presentation synchronization (sub-1.5s) over serverless PostgreSQL infrastructure without requiring dedicated long-running stateful servers.", size: 24 }),
@@ -238,28 +245,32 @@ function createTdd() {
       spacing: { before: 600, after: 200 },
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Student (Self-Study): ", bold: true, size: 24 }),
         new TextRun({ text: "As a student preparing for exams, I want to upload my lecture slides, take adaptive quizzes with AI semantic feedback, and review flashcards on optimal SM-2 intervals so that I retain concepts effortlessly.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Student (Weakness Remediation): ", bold: true, size: 24 }),
         new TextRun({ text: "As a student with low scores in specific chapters, I want the Diagnostic Cockpit to highlight my weak concepts (<70% accuracy) and generate a remedial deck in 1 click.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Presenter / Educator: ", bold: true, size: 24 }),
         new TextRun({ text: "As an instructor, I want to create customized slide decks with interactive polls, timed MCQs, and word clouds so that I can gauge classroom understanding in real-time.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 200, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 200 },
       children: [
         new TextRun({ text: "• Participant (Classroom Attendee): ", bold: true, size: 24 }),
         new TextRun({ text: "As a lecture participant, I want to enter a 6-character room code on my phone, submit live responses, and view aggregate results instantly on the presenter screen.", size: 24 }),
@@ -495,28 +506,32 @@ function createTdd() {
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Card Primitive: ", bold: true, size: 24 }),
         new TextRun({ text: "Standardizes surface depth, border glow, and glassmorphism styling across light and dark modes.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Button Primitive: ", bold: true, size: 24 }),
         new TextRun({ text: "Provides variant hierarchy (primary, secondary, danger, ghost), active loading spinners, and keyboard focus rings.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 150, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 150 },
       children: [
         new TextRun({ text: "• Modal & Drawer Primitives: ", bold: true, size: 24 }),
         new TextRun({ text: "React portal overlays with focus traps, escape key listeners, and backdrop blur dismissals.", size: 24 }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 200, left: 720 },
+      indent: { left: 720 },
+      spacing: { after: 200 },
       children: [
         new TextRun({ text: "• ProgressBar & Heatmap Badges: ", bold: true, size: 24 }),
         new TextRun({ text: "Color-coded indicators rendering mastery levels (<60% red, 60-79% amber, >=80% emerald).", size: 24 }),

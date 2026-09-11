@@ -2,14 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
-
-const AI_MODEL = "llama-3.3-70b-versatile";
+import { getAIClient } from "@/services/ai.service";
 
 interface OralMessage {
   role: "tutor" | "student";
@@ -54,8 +47,9 @@ FORMAT:
 Return a JSON object with:
 - "question": "The first question to ask."`;
 
+    const { client, model } = await getAIClient();
     const response = await client.chat.completions.create({
-      model: AI_MODEL,
+      model,
       messages: [{ role: "system", content: systemPrompt }],
       response_format: { type: "json_object" },
       temperature: 0.6,
@@ -131,8 +125,9 @@ Student's new answer: "${userAnswer}"
 
 Evaluate their answer and ask the next question in JSON format.`;
 
+    const { client, model } = await getAIClient();
     const response = await client.chat.completions.create({
-      model: AI_MODEL,
+      model,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -204,8 +199,9 @@ Return a JSON object with:
     const userPrompt = `Here is the full conversation history:
 ${history.map((h) => `${h.role === "tutor" ? "Tutor" : "Student"}: ${h.text}`).join("\n")}`;
 
+    const { client, model } = await getAIClient();
     const response = await client.chat.completions.create({
-      model: AI_MODEL,
+      model,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

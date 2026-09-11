@@ -126,7 +126,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             }}
             className="w-full p-2.5 text-xs bg-muted/20 border border-border/80 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-foreground select-none cursor-pointer"
           >
-            <option value="default">System Default (Shared Groq / Llama)</option>
+            <option value="default">System Default (Google Gemini Cloud / Auto)</option>
             <option value="gemini">Google Gemini (Bring Your Own Key)</option>
             <option value="groq">Groq Console (Bring Your Own Key)</option>
             <option value="openai">OpenAI ChatGPT (Bring Your Own Key)</option>
