@@ -53,7 +53,9 @@ export async function extractTextFromPDF(
         apiKey: defaultGeminiKey,
         baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
       });
-      aiModel = settings.model || "gemini-1.5-flash";
+      aiModel = (settings.model && settings.model.toLowerCase().includes("gemini"))
+        ? settings.model
+        : (process.env.GEMINI_MODEL || "gemini-1.5-flash");
     }
   }
 

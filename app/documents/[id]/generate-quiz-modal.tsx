@@ -84,7 +84,10 @@ export function GenerateQuizModal({ documentId }: GenerateQuizModalProps) {
   return (
     <>
       <Button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setError("");
+          setIsOpen(true);
+        }}
         variant="primary"
         className="whitespace-nowrap flex items-center gap-2"
       >
