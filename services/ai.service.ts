@@ -3,10 +3,29 @@ import { z } from "zod";
 import type { GeneratedQuestion } from "@/types";
 import { getAISettingsFromCookies } from "@/lib/ai-settings";
 
+function getCloudFallbackClient() {
+  if (process.env.GEMINI_API_KEY) {
+    return {
+      client: new OpenAI({
+        apiKey: process.env.GEMINI_API_KEY,
+        baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      }),
+      model: "gemini-1.5-flash",
+    };
+  }
+  return {
+    client: new OpenAI({
+      apiKey: process.env.GROQ_API_KEY || "",
+      baseURL: "https://api.groq.com/openai/v1",
+    }),
+    model: "llama-3.3-70b-versatile",
+  };
+}
+
 /**
  * Dynamically constructs OpenAI client based on cookie settings or system environment fallbacks.
  */
-export async function getAIClient() {
+export async function getAIClient(): Promise<{ client: OpenAI; model: string; isLocalFallback?: boolean }> {
   const settings = await getAISettingsFromCookies();
   const provider = settings?.provider || "default";
 
@@ -17,6 +36,7 @@ export async function getAIClient() {
         baseURL: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
       }),
       model: settings?.model || process.env.OLLAMA_MODEL || "gemma:2b",
+      isLocalFallback: true,
     };
   }
 
@@ -61,29 +81,46 @@ export async function getAIClient() {
 
   // Fallback to local .env configs
   const isOllamaLocal = process.env.USE_OLLAMA === "true";
-  return {
-    client: new OpenAI({
-      apiKey: isOllamaLocal ? "ollama" : (process.env.GROQ_API_KEY || ""),
-      baseURL: isOllamaLocal
-        ? (process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1")
-        : "https://api.groq.com/openai/v1",
-    }),
-    model: isOllamaLocal
-      ? (process.env.OLLAMA_MODEL || "gemma:2b")
-      : "llama-3.3-70b-versatile",
-  };
+  if (isOllamaLocal) {
+    return {
+      client: new OpenAI({
+        apiKey: "ollama",
+        baseURL: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+      }),
+      model: process.env.OLLAMA_MODEL || "gemma:2b",
+      isLocalFallback: true,
+    };
+  }
+
+  return getCloudFallbackClient();
 }
 
-// Dynamic OpenAI client proxy redirecting requests to custom users settings
+// Dynamic OpenAI client proxy redirecting requests to custom users settings with auto-fallback
 const client = {
   get chat() {
     return {
       get completions() {
         return {
           create: async (params: any, options: any) => {
-            const { client: actualClient, model } = await getAIClient();
+            const { client: actualClient, model, isLocalFallback } = await getAIClient();
             params.model = model;
-            return actualClient.chat.completions.create(params, options);
+            try {
+              return await actualClient.chat.completions.create(params, options);
+            } catch (err: any) {
+              const isConnectionError =
+                err?.code === "ECONNREFUSED" ||
+                err?.message?.includes("ECONNREFUSED") ||
+                err?.message?.includes("fetch failed") ||
+                err?.message?.includes("Connection error");
+
+              if (isLocalFallback && isConnectionError && (process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY)) {
+                console.warn("⚠️ Local Ollama unreachable at port 11434. Gracefully falling back to cloud AI provider...");
+                const cloudClient = getCloudFallbackClient();
+                params.model = cloudClient.model;
+                return await cloudClient.client.chat.completions.create(params, options);
+              }
+              throw err;
+            }
           }
         };
       }
