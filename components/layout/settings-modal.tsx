@@ -51,7 +51,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     if (isOpen) {
       const savedProvider = (getCookie("custom_provider") || "default") as any;
       const savedApiKey = getCookie("custom_api_key") || "";
-      const savedModel = getCookie("custom_model") || "";
+      let savedModel = getCookie("custom_model") || "";
+
+      if (savedProvider === "gemini" && (!savedModel || !savedModel.toLowerCase().includes("gemini"))) {
+        savedModel = "gemini-1.5-flash";
+      } else if (savedProvider === "groq" && (!savedModel || !savedModel.includes("llama"))) {
+        savedModel = "llama-3.3-70b-versatile";
+      } else if (savedProvider === "openai" && (!savedModel || !savedModel.includes("gpt"))) {
+        savedModel = "gpt-4o-mini";
+      }
 
       setProvider(savedProvider);
       setApiKey(savedApiKey);
@@ -87,6 +95,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     setProvider("default");
     setApiKey("");
     setModelName("");
+    deleteCookie("custom_provider");
+    deleteCookie("custom_api_key");
+    deleteCookie("custom_model");
+    setTimeout(() => {
+      onClose();
+      window.location.reload();
+    }, 300);
   };
 
   return (

@@ -60,33 +60,42 @@ export async function getAIClient(): Promise<{ client: OpenAI; model: string; is
   }
 
   if (provider === "groq" && settings?.apiKey) {
-    console.log("🤖 [AI Engine] Using custom user Groq key");
+    const groqModel = settings?.model && (settings.model.includes("llama") || settings.model.includes("mixtral") || settings.model.includes("gemma"))
+      ? settings.model
+      : "llama-3.3-70b-versatile";
+    console.log(`🤖 [AI Engine] Using custom user Groq key (${groqModel})`);
     return {
       client: new OpenAI({
         apiKey: settings.apiKey,
         baseURL: "https://api.groq.com/openai/v1",
       }),
-      model: settings?.model || "llama-3.3-70b-versatile",
+      model: groqModel,
     };
   }
 
   if (provider === "gemini" && settings?.apiKey) {
-    console.log("🤖 [AI Engine] Using custom user Gemini key");
+    const geminiModel = settings?.model && settings.model.toLowerCase().includes("gemini")
+      ? settings.model
+      : (process.env.GEMINI_MODEL || "gemini-1.5-flash");
+    console.log(`🤖 [AI Engine] Using custom user Gemini key (${geminiModel})`);
     return {
       client: new OpenAI({
         apiKey: settings.apiKey,
         baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
       }),
-      model: settings?.model || "gemini-1.5-flash",
+      model: geminiModel,
     };
   }
 
   if (provider === "openai" && settings?.apiKey) {
+    const openaiModel = settings?.model && settings.model.toLowerCase().includes("gpt")
+      ? settings.model
+      : "gpt-4o-mini";
     return {
       client: new OpenAI({
         apiKey: settings.apiKey,
       }),
-      model: settings?.model || "gpt-4o-mini",
+      model: openaiModel,
     };
   }
 
