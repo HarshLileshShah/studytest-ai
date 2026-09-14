@@ -222,7 +222,7 @@ export function InteractiveSandbox() {
                       Distributed Systems
                     </button>
                   </div>
-                  <span className="text-[11px] font-semibold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-full">
+                  <span className="text-[11px] font-semibold text-purple-700 dark:text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-full">
                     {quizQuestions[selectedQuestionIndex].topic} • {quizQuestions[selectedQuestionIndex].difficulty}
                   </span>
                 </div>
@@ -243,9 +243,9 @@ export function InteractiveSandbox() {
 
                     if (submitted) {
                       if (isCorrect) {
-                        style = "bg-emerald-500/15 border-emerald-500/60 text-emerald-300 font-semibold";
+                        style = "bg-emerald-500/15 border-emerald-500/60 text-emerald-700 dark:text-emerald-300 font-semibold";
                       } else if (isSelected && !isCorrect) {
-                        style = "bg-red-500/15 border-red-500/60 text-red-300";
+                        style = "bg-red-500/15 border-red-500/60 text-red-700 dark:text-red-300";
                       } else {
                         style = "bg-muted/10 border-border/40 text-muted-foreground opacity-60";
                       }
@@ -266,8 +266,8 @@ export function InteractiveSandbox() {
                           </span>
                           <span>{opt}</span>
                         </div>
-                        {submitted && isCorrect && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
-                        {submitted && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-400" />}
+                        {submitted && isCorrect && <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
+                        {submitted && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />}
                       </button>
                     );
                   })}
@@ -332,14 +332,14 @@ export function InteractiveSandbox() {
                     <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-0.5">
                       Ease Factor (EF)
                     </div>
-                    <div className="text-xl font-extrabold text-emerald-400">{sm2State.easeFactor}</div>
+                    <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">{sm2State.easeFactor}</div>
                   </div>
                 </div>
 
                 {/* 3D Flip Card Container */}
                 <div
                   onClick={() => setCardFlipped(!cardFlipped)}
-                  className="w-full h-56 rounded-2xl p-6 bg-gradient-to-br from-card to-muted/40 border border-primary/30 shadow-xl flex flex-col justify-between cursor-pointer hover:border-primary/60 transition-all duration-300 relative group select-none"
+                  className="w-full min-h-56 rounded-2xl p-6 bg-gradient-to-br from-card to-muted/40 border border-primary/30 shadow-xl flex flex-col justify-between cursor-pointer hover:border-primary/60 transition-all duration-300 relative group select-none"
                 >
                   <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground">
                     <span className="text-primary font-semibold">SuperMemo-2 (SM-2) Spaced Repetition</span>
@@ -360,11 +360,11 @@ export function InteractiveSandbox() {
                       </div>
                     ) : (
                       <div className="animate-in fade-in zoom-in-95 duration-200">
-                        <div className="text-xs uppercase tracking-widest text-emerald-400 mb-2 font-bold">
+                        <div className="text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2 font-bold">
                           Back (Answer)
                         </div>
                         <p className="text-sm font-medium text-foreground leading-relaxed max-w-md mx-auto">
-                          The lower bound is clamped at <strong className="text-emerald-300 font-bold">EF ≥ 1.3</strong>.
+                          The lower bound is clamped at <strong className="text-emerald-700 dark:text-emerald-300 font-bold">EF ≥ 1.3</strong>.
                           Without this mathematical floor, repeated difficult recall attempts cause ease factor degradation, leading to interval collapse and permanent review congestion.
                         </p>
                       </div>
@@ -381,14 +381,14 @@ export function InteractiveSandbox() {
                   <div className="text-xs font-semibold text-muted-foreground mb-3">
                     Grade Recall Quality (0 = Total Blackout, 5 = Instant Recall):
                   </div>
-                  <div className="grid grid-cols-6 gap-2">
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                     {[
-                      { q: 0, label: "0 (Blackout)", color: "hover:bg-red-500/20 text-red-400" },
-                      { q: 1, label: "1 (Failed)", color: "hover:bg-red-500/20 text-red-300" },
-                      { q: 2, label: "2 (Hard)", color: "hover:bg-amber-500/20 text-amber-300" },
-                      { q: 3, label: "3 (Pass)", color: "hover:bg-blue-500/20 text-blue-300" },
-                      { q: 4, label: "4 (Good)", color: "hover:bg-emerald-500/20 text-emerald-300" },
-                      { q: 5, label: "5 (Mastery)", color: "hover:bg-emerald-500/30 text-emerald-400" },
+                      { q: 0, label: "0 (Blackout)", color: "hover:bg-red-500/20 text-red-600 dark:text-red-400" },
+                      { q: 1, label: "1 (Failed)", color: "hover:bg-red-500/20 text-red-600 dark:text-red-300" },
+                      { q: 2, label: "2 (Hard)", color: "hover:bg-amber-500/20 text-amber-700 dark:text-amber-300" },
+                      { q: 3, label: "3 (Pass)", color: "hover:bg-blue-500/20 text-blue-700 dark:text-blue-300" },
+                      { q: 4, label: "4 (Good)", color: "hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300" },
+                      { q: 5, label: "5 (Mastery)", color: "hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-400" },
                     ].map((item) => (
                       <button
                         key={item.q}
@@ -408,7 +408,7 @@ export function InteractiveSandbox() {
             {/* ========================================================================= */}
             {activeTab === "mindmap" && (
               <div className="max-w-3xl mx-auto w-full text-center">
-                <div className="p-6 rounded-2xl bg-[#09090e] border border-border/80 relative overflow-hidden shadow-inner">
+                <div className="p-6 rounded-2xl bg-card dark:bg-[#09090e] border border-border/80 relative overflow-hidden shadow-inner">
                   <div className="flex items-center justify-between mb-4 border-b border-border/50 pb-3">
                     <span className="text-xs font-bold text-primary flex items-center gap-1.5">
                       <BrainCircuit className="w-4 h-4" /> Mermaid.js Concept Topology Graph
@@ -426,17 +426,17 @@ export function InteractiveSandbox() {
                     <div className="w-0.5 h-6 bg-primary/40" />
 
                     {/* Level 2 Nodes */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                       <div className="p-3 rounded-xl bg-muted/40 border border-border hover:border-purple-500 transition-colors text-left">
-                        <div className="text-[11px] font-bold text-purple-300 mb-1">1. Depolarization</div>
+                        <div className="text-[11px] font-bold text-purple-700 dark:text-purple-300 mb-1">1. Depolarization</div>
                         <div className="text-[10px] text-muted-foreground">Voltage-gated Na⁺ channels open rapidly.</div>
                       </div>
                       <div className="p-3 rounded-xl bg-muted/40 border border-border hover:border-indigo-500 transition-colors text-left">
-                        <div className="text-[11px] font-bold text-indigo-300 mb-1">2. Repolarization</div>
+                        <div className="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 mb-1">2. Repolarization</div>
                         <div className="text-[10px] text-muted-foreground">Delayed rectifier K⁺ channels efflux ions.</div>
                       </div>
-                      <div className="p-3 rounded-xl bg-muted/40 border border-border hover:border-emerald-500 transition-colors text-left col-span-2 sm:col-span-1">
-                        <div className="text-[11px] font-bold text-emerald-300 mb-1">3. Refractory Period</div>
+                      <div className="p-3 rounded-xl bg-muted/40 border border-border hover:border-emerald-500 transition-colors text-left">
+                        <div className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 mb-1">3. Refractory Period</div>
                         <div className="text-[10px] text-muted-foreground">Inactivation gates enforce unidirectional flow.</div>
                       </div>
                     </div>
@@ -499,7 +499,7 @@ export function InteractiveSandbox() {
                     </button>
 
                     <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
-                      <Volume2 className="w-4 h-4 text-emerald-400" />
+                      <Volume2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <span>Zero Cloud TTS Fees (Synthesized Client-Side)</span>
                     </div>
                   </div>
@@ -523,7 +523,7 @@ export function InteractiveSandbox() {
                       <span className="text-xs font-bold text-foreground">Room: #BIO-409</span>
                       <span className="text-[10px] text-muted-foreground">(72 Students Connected)</span>
                     </div>
-                    <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                    <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
                       Sub-1.5s Live Sync
                     </span>
                   </div>

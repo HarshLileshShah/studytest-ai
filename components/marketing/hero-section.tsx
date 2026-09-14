@@ -79,28 +79,28 @@ export function HeroSection() {
         {/* Live Metrics Proof Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-16">
           <div className="glass-card p-4 rounded-2xl text-center border border-border/70 hover:border-primary/30 transition-colors">
-            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent mb-1">
+            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent mb-1">
               100k+
             </div>
             <div className="text-xs font-medium text-muted-foreground">Questions Generated</div>
           </div>
 
           <div className="glass-card p-4 rounded-2xl text-center border border-border/70 hover:border-primary/30 transition-colors">
-            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-1">
+            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-1">
               94.2%
             </div>
             <div className="text-xs font-medium text-muted-foreground">Long-Term Retention</div>
           </div>
 
           <div className="glass-card p-4 rounded-2xl text-center border border-border/70 hover:border-primary/30 transition-colors">
-            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent mb-1">
+            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-1">
               &lt;1.5s
             </div>
             <div className="text-xs font-medium text-muted-foreground">AI Generation Latency</div>
           </div>
 
           <div className="glass-card p-4 rounded-2xl text-center border border-border/70 hover:border-primary/30 transition-colors">
-            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent mb-1">
+            <div className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-500 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent mb-1">
               SM-2 Math
             </div>
             <div className="text-xs font-medium text-muted-foreground">SuperMemo Spaced Repetition</div>
@@ -111,7 +111,7 @@ export function HeroSection() {
         <div className="relative max-w-5xl mx-auto">
           {/* Glowing Border Wrapper */}
           <div className="relative rounded-3xl p-1 bg-gradient-to-b from-primary/40 via-indigo-500/20 to-transparent shadow-2xl shadow-primary/10">
-            <div className="bg-[#0c0c12] rounded-[22px] p-4 sm:p-6 lg:p-8 border border-white/5 overflow-hidden text-left">
+            <div className="bg-card/90 dark:bg-[#0c0c12] rounded-[22px] p-4 sm:p-6 lg:p-8 border border-border/80 dark:border-white/5 overflow-hidden text-left shadow-2xl backdrop-blur-md">
               {/* Mock Window Title Bar */}
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/60">
                 <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export function HeroSection() {
                   <div className="space-y-1.5">
                     <div className="text-[10px] flex justify-between text-muted-foreground">
                       <span>Synaptic_Transmission.pdf</span>
-                      <span className="text-emerald-400 font-semibold">Ready (100%)</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Ready (100%)</span>
                     </div>
                     <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
                       <div className="h-full bg-gradient-to-r from-primary to-indigo-500 w-full" />
@@ -158,7 +158,7 @@ export function HeroSection() {
                     <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
                       Adaptive Question #4
                     </span>
-                    <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
                       Medium
                     </span>
                   </div>
@@ -169,9 +169,9 @@ export function HeroSection() {
                     <div className="p-2 rounded-lg bg-muted/40 border border-border/60 text-muted-foreground">
                       A. Sodium (Na⁺)
                     </div>
-                    <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center justify-between">
+                    <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-semibold flex items-center justify-between">
                       <span>B. Calcium (Ca²⁺)</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div className="p-2 rounded-lg bg-muted/40 border border-border/60 text-muted-foreground">
                       C. Potassium (K⁺)
@@ -184,11 +184,11 @@ export function HeroSection() {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
-                        <Layers className="w-4 h-4 text-purple-400" />
+                        <Layers className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                         SM-2 Memory Schedule
                       </div>
-                      <span className="text-[10px] font-bold text-amber-400 flex items-center gap-0.5">
-                        <Flame className="w-3 h-3 fill-amber-400" /> 7d Streak
+                      <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-0.5">
+                        <Flame className="w-3 h-3 fill-amber-500 text-amber-500" /> 7d Streak
                       </span>
                     </div>
                     <p className="text-[11px] text-muted-foreground leading-normal mb-3">
@@ -196,7 +196,7 @@ export function HeroSection() {
                     </p>
                   </div>
                   <div className="p-2.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-center">
-                    <span className="text-[10px] text-purple-300 font-medium">
+                    <span className="text-[10px] text-purple-700 dark:text-purple-300 font-medium">
                       🎯 Weakness Slaying Deck automatically queued for tomorrow!
                     </span>
                   </div>

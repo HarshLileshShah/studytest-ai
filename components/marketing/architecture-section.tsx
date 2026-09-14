@@ -101,7 +101,7 @@ export function ArchitectureSection() {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-border/50 text-[10px] text-muted-foreground font-mono flex items-center gap-1 text-emerald-400">
+                <div className="mt-4 pt-3 border-t border-border/50 text-[10px] text-muted-foreground font-mono flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                   <CheckCircle2 className="w-3 h-3" />
                   <span>Validated & Tested</span>
                 </div>
@@ -111,7 +111,7 @@ export function ArchitectureSection() {
         </div>
 
         {/* Deep Dive Code & Architecture Box */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-border/80 bg-[#09090d] shadow-2xl">
+        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-border/80 bg-card dark:bg-[#09090d] shadow-2xl">
           <div className="flex flex-col lg:flex-row gap-8 items-start">
             {/* Left explanation */}
             <div className="lg:w-1/2 space-y-4">
@@ -123,19 +123,19 @@ export function ArchitectureSection() {
                 Why Naive Fixed Prompts Fail in Production
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Raw LLM outputs frequently break when models wrap responses in markdown fences (<code className="text-purple-300 font-mono">```json ... ```</code>), introduce conversational intros (<em className="text-zinc-400">"Sure, here are your questions:"</em>), or hallucinate a <code className="text-purple-300 font-mono">correctAnswer</code> that doesn't exist in the options array.
+                Raw LLM outputs frequently break when models wrap responses in markdown fences (<code className="text-purple-700 dark:text-purple-300 font-mono">```json ... ```</code>), introduce conversational intros (<em className="text-muted-foreground italic">&ldquo;Sure, here are your questions:&rdquo;</em>), or hallucinate a <code className="text-purple-700 dark:text-purple-300 font-mono">correctAnswer</code> that doesn&apos;t exist in the options array.
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 StudyTest AI solves this at the protocol level with a multi-layered defensive parser and Zod schema validator, backed by 34 automated unit tests verifying edge-case resilience.
               </p>
               <div className="pt-2 flex flex-wrap gap-2">
-                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-zinc-300">
+                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-foreground">
                   ✓ Vitest & tsx --test
                 </span>
-                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-zinc-300">
+                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-foreground">
                   ✓ SM-2 Math Clamped
                 </span>
-                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-zinc-300">
+                <span className="text-[11px] px-3 py-1 rounded-lg bg-muted/40 border border-border font-mono text-foreground">
                   ✓ Zod Type Safety
                 </span>
               </div>
@@ -143,10 +143,10 @@ export function ArchitectureSection() {
 
             {/* Right code snippet mock */}
             <div className="lg:w-1/2 w-full">
-              <div className="rounded-2xl bg-[#060609] border border-border/80 p-4 font-mono text-[11px] overflow-x-auto shadow-inner text-zinc-300">
+              <div className="rounded-2xl bg-zinc-950 dark:bg-[#060609] border border-border/80 p-4 font-mono text-[11px] overflow-x-auto shadow-inner text-zinc-200">
                 <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 text-muted-foreground text-[10px]">
                   <span>services/flashcard.service.ts</span>
-                  <span className="text-emerald-400">SM-2 Pure Math</span>
+                  <span className="text-emerald-400 font-semibold">SM-2 Pure Math</span>
                 </div>
                 <pre className="leading-relaxed">
 {`export function calculateSM2(

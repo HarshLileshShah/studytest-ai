@@ -25,7 +25,7 @@ export function FeaturePillars() {
       description:
         "Generates 4 distinct question modalities: standard Multiple Choice, verification True/False, semantically graded Short Answers, and interactive Voice-to-Voice Oral Exams. Choose between Theory, Practical, or Mixed cognitive depth.",
       gradient: "from-blue-500/20 via-primary/20 to-purple-500/20",
-      accent: "text-blue-400 border-blue-500/30",
+      accent: "text-blue-600 dark:text-blue-400 border-blue-500/30 bg-blue-500/10",
       bullets: [
         "Defensive JSON parser prevents LLM markdown fence breakage",
         "Semantic short-answer AI grading with constructive advice",
@@ -39,7 +39,7 @@ export function FeaturePillars() {
       description:
         "Implements the exact mathematical SM-2 interval algorithm with lower-bound Ease Factor clamping (EF ≥ 1.3). Mathematically guarantees review intervals expand optimally while preventing recall collapse during difficult retention cycles.",
       gradient: "from-purple-500/20 via-indigo-500/20 to-pink-500/20",
-      accent: "text-purple-400 border-purple-500/30",
+      accent: "text-purple-600 dark:text-purple-400 border-purple-500/30 bg-purple-500/10",
       bullets: [
         "Interactive 3D card flips with 6-tier recall grading (0–5)",
         "Automated daily review scheduling and streak counters",
@@ -53,7 +53,7 @@ export function FeaturePillars() {
       description:
         "Every mistake is tagged across a conceptual taxonomy heatmap. The system pinpoints exact weak topics where retention falls below 70% and generates a 1-click targeted remedial study deck to conquer weaknesses immediately.",
       gradient: "from-emerald-500/20 via-teal-500/20 to-cyan-500/20",
-      accent: "text-emerald-400 border-emerald-500/30",
+      accent: "text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
       bullets: [
         "Real-time accuracy heatmaps across all study modules",
         "One-click targeted remediation question generator",
@@ -67,7 +67,7 @@ export function FeaturePillars() {
       description:
         "Synthesizes dynamic, dual-speaker AI podcast debates between a seasoned professor and an inquisitive student. Rendered entirely client-side on the device via the Web Speech API, eliminating all cloud TTS per-character API costs.",
       gradient: "from-amber-500/20 via-orange-500/20 to-yellow-500/20",
-      accent: "text-amber-400 border-amber-500/30",
+      accent: "text-amber-700 dark:text-amber-400 border-amber-500/30 bg-amber-500/10",
       bullets: [
         "Audio study companion for commutes, workouts, and multitasking",
         "Synchronized visual transcript with active speaker highlighting",
@@ -81,7 +81,7 @@ export function FeaturePillars() {
       description:
         "Turn any study deck into a live interactive Kahoot/Mentimeter classroom session in one click. Students join with a 6-character room code on mobile and submit real-time responses with sub-1.5s live synchronized broadcast.",
       gradient: "from-rose-500/20 via-pink-500/20 to-indigo-500/20",
-      accent: "text-rose-400 border-rose-500/30",
+      accent: "text-rose-600 dark:text-rose-400 border-rose-500/30 bg-rose-500/10",
       bullets: [
         "Present slides with embedded live audience MCQs & polls",
         "Real-time aggregate voting distributions on presenter screen",
@@ -95,7 +95,7 @@ export function FeaturePillars() {
       description:
         "Switch effortlessly between Google Gemini Cloud, Groq High-Speed Cloud, OpenAI ChatGPT, OpenRouter, or private local Ollama. Bring your own keys with automatic cloud fallback and zero vendor lock-in.",
       gradient: "from-cyan-500/20 via-blue-500/20 to-indigo-500/20",
-      accent: "text-cyan-400 border-cyan-500/30",
+      accent: "text-cyan-600 dark:text-cyan-400 border-cyan-500/30 bg-cyan-500/10",
       bullets: [
         "Multi-cloud automatic failover prevents API outages",
         "Local Ollama support for private, offline zero-data-leak study",

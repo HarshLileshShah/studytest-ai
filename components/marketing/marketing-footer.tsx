@@ -5,7 +5,7 @@ import { GraduationCap, Code2, Heart, ShieldCheck, Globe, ExternalLink } from "l
 
 export function MarketingFooter() {
   return (
-    <footer className="border-t border-border/80 bg-[#07070a] text-muted-foreground pt-16 pb-12 text-xs">
+    <footer className="border-t border-border/80 bg-muted/30 dark:bg-[#07070a] text-muted-foreground pt-16 pb-12 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Grid */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-border/60">
@@ -22,8 +22,8 @@ export function MarketingFooter() {
             <p className="text-xs text-muted-foreground leading-relaxed max-w-sm">
               The AI-Powered Active Recall Operating System. Transforming static lecture notes, slides, and textbooks into adaptive quizzes, spaced repetition memory decks, and live classroom polls.
             </p>
-            <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>All AI Pipelines Operational</span>
             </div>
           </div>

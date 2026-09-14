@@ -112,7 +112,7 @@ export function ComparisonMatrix() {
 
                     {/* StudyTest AI Column (Highlighted) */}
                     <td className="py-4 px-6 bg-primary/5 border-x border-primary/20 text-center">
-                      <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-bold">
+                      <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold">
                         <Check className="w-4 h-4" />
                       </div>
                     </td>
@@ -121,7 +121,7 @@ export function ComparisonMatrix() {
                     <td className="py-4 px-6 text-center text-muted-foreground">
                       {typeof row.anki === "boolean" ? (
                         row.anki ? (
-                          <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                         ) : (
                           <X className="w-4 h-4 text-muted-foreground/40 mx-auto" />
                         )
@@ -134,12 +134,12 @@ export function ComparisonMatrix() {
                     <td className="py-4 px-6 text-center text-muted-foreground">
                       {typeof row.chatgpt === "boolean" ? (
                         row.chatgpt ? (
-                          <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                         ) : (
                           <X className="w-4 h-4 text-muted-foreground/40 mx-auto" />
                         )
                       ) : (
-                        <span className="text-[11px] font-medium text-amber-300">{row.chatgpt}</span>
+                        <span className="text-[11px] font-medium text-amber-700 dark:text-amber-300">{row.chatgpt}</span>
                       )}
                     </td>
 
@@ -147,7 +147,7 @@ export function ComparisonMatrix() {
                     <td className="py-4 px-6 text-center text-muted-foreground">
                       {typeof row.kahoot === "boolean" ? (
                         row.kahoot ? (
-                          <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                         ) : (
                           <X className="w-4 h-4 text-muted-foreground/40 mx-auto" />
                         )
