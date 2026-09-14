@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { generateFlashcards, generateSingleFlashcardFromText } from "./ai.service";
+import { calculateSM2 } from "@/lib/sm2";
+
+export { calculateSM2 };
 
 /**
  * Generate a unique 6-character uppercase alphanumeric share code with prefix "FD-".
@@ -214,45 +217,6 @@ export async function getDeck(deckId: string, userId: string) {
   return deck;
 }
 
-/**
- * Pure SuperMemo-2 (SM-2) spaced repetition interval and ease factor calculation.
- */
-export function calculateSM2(
-  quality: number,
-  currentRepetitions: number = 0,
-  currentInterval: number = 0,
-  currentEaseFactor: number = 2.5
-) {
-  // Validate quality bounds (0 to 5)
-  const q = Math.max(0, Math.min(5, quality));
-
-  let interval = currentInterval;
-  let repetitions = currentRepetitions;
-  let easeFactor = currentEaseFactor;
-
-  // Spaced repetition scheduler logic
-  if (q >= 3) {
-    if (repetitions === 0) {
-      interval = 1;
-    } else if (repetitions === 1) {
-      interval = 6;
-    } else {
-      interval = Math.round(interval * easeFactor);
-    }
-    repetitions++;
-  } else {
-    repetitions = 0;
-    interval = 1;
-  }
-
-  // Adjust EF according to SM-2 formula
-  easeFactor = easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
-  if (easeFactor < 1.3) {
-    easeFactor = 1.3; // Bounds restriction
-  }
-
-  return { interval, repetitions, easeFactor };
-}
 
 /**
  * Review a flashcard and update its spaced repetition intervals using SuperMemo-2 (SM-2).

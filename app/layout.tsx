@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
-import { Sidebar } from "@/components/layout/sidebar";
+import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "StudyTest AI — AI-Powered Study Assistant",
+  title: "StudyTest AI — AI-Powered Active Recall & Learning Operating System",
   description:
-    "Upload PDF study materials and let AI generate practice quizzes, evaluate your answers, and provide personalized feedback.",
-  keywords: ["study", "AI", "quiz", "learning", "PDF", "practice test"],
+    "Transform PDFs and lecture slides into interactive quizzes, SM-2 spaced repetition flashcards, concept mind maps, and live multiplayer classroom sessions.",
+  keywords: ["study", "AI", "quiz", "learning", "PDF", "flashcards", "spaced repetition", "SM-2", "active recall"],
 };
 
 export default function RootLayout({
@@ -33,12 +33,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full bg-background text-foreground font-sans antialiased" suppressHydrationWarning>
         <Providers>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="layout-main">
-              <div className="main-container">{children}</div>
-            </main>
-          </div>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>
