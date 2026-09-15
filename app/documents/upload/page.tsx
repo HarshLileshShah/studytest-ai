@@ -6,6 +6,7 @@ import { Upload, FileText, X, Loader2, CheckCircle2, AlertCircle, Sparkles } fro
 import { uploadDocument, createDocumentFromTopicAction } from "@/app/actions/document.actions";
 import { formatFileSize, cn } from "@/lib/utils";
 import Link from "next/link";
+import { DemoLimitModal } from "@/components/auth/demo-limit-modal";
 
 type UploadState = "idle" | "uploading" | "success" | "error";
 
@@ -21,6 +22,7 @@ export default function UploadPage() {
   const [dragOver, setDragOver] = useState(false);
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showDemoModal, setShowDemoModal] = useState(false);
 
   const handleFileSelect = useCallback((selectedFile: File) => {
     if (!selectedFile.name.toLowerCase().endsWith(".pdf")) {
@@ -67,7 +69,10 @@ export default function UploadPage() {
       }, 1500);
     } else {
       setUploadState("error");
-      setErrorMessage(result.error || "Upload failed");
+      if (result.isDemoLimit || result.error === "DEMO_LIMIT_REACHED") {
+        setShowDemoModal(true);
+      }
+      setErrorMessage(result.message || result.error || "Upload failed");
     }
   };
 
@@ -86,7 +91,10 @@ export default function UploadPage() {
         }, 1500);
       } else {
         setUploadState("error");
-        setErrorMessage(result.error || "Generation failed.");
+        if (result.isDemoLimit || result.error === "DEMO_LIMIT_REACHED") {
+          setShowDemoModal(true);
+        }
+        setErrorMessage(result.message || result.error || "Generation failed.");
       }
     } catch (err) {
       setUploadState("error");
@@ -328,6 +336,13 @@ export default function UploadPage() {
           </>
         )}
       </div>
+
+      {/* Demo Limit Modal Prompt */}
+      <DemoLimitModal
+        isOpen={showDemoModal}
+        onClose={() => setShowDemoModal(false)}
+        limitType="document"
+      />
     </div>
   );
 }

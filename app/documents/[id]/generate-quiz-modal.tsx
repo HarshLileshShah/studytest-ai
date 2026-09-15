@@ -6,6 +6,7 @@ import { Sparkles, HelpCircle, CheckSquare, AlignLeft, Mic } from "lucide-react"
 import { generateQuiz } from "@/app/actions/quiz.actions";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
+import { DemoLimitModal } from "@/components/auth/demo-limit-modal";
 
 interface GenerateQuizModalProps {
   documentId: string;
@@ -22,6 +23,7 @@ export function GenerateQuizModal({ documentId }: GenerateQuizModalProps) {
   const [customPrompt, setCustomPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showDemoModal, setShowDemoModal] = useState(false);
   const router = useRouter();
 
   const handleGenerate = async () => {
@@ -41,7 +43,12 @@ export function GenerateQuizModal({ documentId }: GenerateQuizModalProps) {
         setIsOpen(false);
         router.push(`/quiz/${result.quizId}`);
       } else {
-        setError(result.error || "Failed to generate quiz.");
+        if (result.isDemoLimit || result.error === "DEMO_LIMIT_REACHED") {
+          setIsOpen(false);
+          setShowDemoModal(true);
+        } else {
+          setError(result.error || "Failed to generate quiz.");
+        }
         setLoading(false);
       }
     } catch (err) {
@@ -334,6 +341,13 @@ export function GenerateQuizModal({ documentId }: GenerateQuizModalProps) {
           </Button>
         </div>
       </Modal>
+
+      {/* Demo Limit Modal */}
+      <DemoLimitModal
+        isOpen={showDemoModal}
+        onClose={() => setShowDemoModal(false)}
+        limitType="quiz"
+      />
     </>
   );
 }

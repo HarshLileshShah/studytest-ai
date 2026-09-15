@@ -83,8 +83,38 @@ export default async function DashboardPage() {
       }
     : null;
 
+  const isDemo = userId.startsWith("demo_");
+
   return (
     <div className="animate-fade-in">
+      {/* Demo Account Sandbox Banner */}
+      {isDemo && (
+        <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/10 to-indigo-500/15 border border-primary/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm backdrop-blur-sm">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary flex-shrink-0 shadow-sm">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-sm font-bold text-foreground flex items-center gap-2">
+                <span>⚡ Demo Sandbox Active</span>
+                <span className="text-[10px] font-bold bg-primary/20 text-primary px-2.5 py-0.5 rounded-full border border-primary/30">
+                  1 Free Upload & 1 Test Included
+                </span>
+              </div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                Your demo data is isolated to this session. Sign in with Google anytime for unlimited uploads, voice exams, and permanent analytics.
+              </div>
+            </div>
+          </div>
+          <Link
+            href="/login"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-primary via-purple-600 to-indigo-600 hover:from-primary/95 hover:to-indigo-500 shadow-md shadow-primary/25 active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+          >
+            Sign In with Google →
+          </Link>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
         <div>

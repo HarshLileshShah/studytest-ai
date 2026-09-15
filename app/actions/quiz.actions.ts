@@ -24,6 +24,23 @@ export async function generateQuiz(
     return { success: false, error: "Unauthorized. Please sign in." };
   }
 
+  // Demo account limit: 1 test/quiz max
+  const isDemo = userId.startsWith("demo_");
+  if (isDemo) {
+    const { prisma } = await import("@/lib/prisma");
+    const quizCount = await prisma.generatedQuiz.count({
+      where: { document: { userId } },
+    });
+    if (quizCount >= 1) {
+      return {
+        success: false,
+        error: "DEMO_LIMIT_REACHED",
+        isDemoLimit: true,
+        message: "Demo accounts are limited to 1 test generation. Please sign in with Google to generate unlimited practice tests, oral exams, and spaced repetition decks!",
+      };
+    }
+  }
+
   try {
     const document = await getDocument(documentId);
 

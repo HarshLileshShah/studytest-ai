@@ -25,6 +25,23 @@ export async function uploadDocument(formData: FormData) {
     return { success: false, error: "Unauthorized. Please sign in." };
   }
 
+  // Demo account limit: 1 document max
+  const isDemo = userId.startsWith("demo_");
+  if (isDemo) {
+    const { prisma } = await import("@/lib/prisma");
+    const docCount = await prisma.document.count({
+      where: { userId },
+    });
+    if (docCount >= 1) {
+      return {
+        success: false,
+        error: "DEMO_LIMIT_REACHED",
+        isDemoLimit: true,
+        message: "Demo accounts are limited to 1 document upload. Please sign in with Google to unlock unlimited uploads and permanent storage.",
+      };
+    }
+  }
+
   const file = formData.get("file") as File | null;
   const title = formData.get("title") as string | null;
 
@@ -367,6 +384,23 @@ export async function createDocumentFromTopicAction(topicName: string) {
 
   if (!userId) {
     return { success: false, error: "Unauthorized. Please sign in." };
+  }
+
+  // Demo account limit: 1 document max
+  const isDemo = userId.startsWith("demo_");
+  if (isDemo) {
+    const { prisma } = await import("@/lib/prisma");
+    const docCount = await prisma.document.count({
+      where: { userId },
+    });
+    if (docCount >= 1) {
+      return {
+        success: false,
+        error: "DEMO_LIMIT_REACHED",
+        isDemoLimit: true,
+        message: "Demo accounts are limited to 1 document upload. Please sign in with Google to unlock unlimited study guides and persistent storage.",
+      };
+    }
   }
 
   if (!topicName || !topicName.trim()) {
