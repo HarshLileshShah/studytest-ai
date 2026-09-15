@@ -35,15 +35,17 @@ export function PricingSection() {
         </div>
 
         {/* Single Premium Free Plan Card */}
-        <div className="max-w-3xl mx-auto">
-          <div className="glass-card rounded-3xl p-8 sm:p-12 border border-primary/40 shadow-2xl shadow-primary/10 bg-gradient-to-b from-card via-card to-primary/5 relative overflow-hidden">
-            {/* Glowing Accent Badge */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-gradient-to-r from-primary via-purple-600 to-indigo-600 text-white font-extrabold text-[11px] tracking-wider uppercase shadow-lg shadow-primary/30 flex items-center gap-1.5">
+        <div className="max-w-3xl mx-auto relative pt-3">
+          {/* Top Pill - Placed in normal layout flow so it never gets clipped */}
+          <div className="flex justify-center -mb-3.5 relative z-20">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-primary via-purple-600 to-indigo-600 text-white font-extrabold text-xs tracking-wider uppercase shadow-xl shadow-primary/30 border border-white/20 select-none">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Free Community Edition • All Features Included</span>
             </div>
+          </div>
 
-            <div className="pt-2">
+          <div className="glass-card rounded-3xl p-8 sm:p-12 pt-10 sm:pt-12 border border-primary/30 shadow-2xl shadow-primary/10 bg-gradient-to-b from-card via-card to-primary/5 relative">
+            <div>
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-6 border-b border-border/70 mb-8">
                 <div>
                   <h3 className="text-2xl sm:text-3xl font-black text-foreground">
@@ -53,7 +55,7 @@ export function PricingSection() {
                     Everything you need to master exams, technical certifications, and university courses.
                   </p>
                 </div>
-                <div className="flex items-baseline gap-1">
+                <div className="flex items-baseline gap-1.5 flex-shrink-0">
                   <span className="text-4xl sm:text-5xl font-black text-foreground">$0</span>
                   <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     / Free Forever
